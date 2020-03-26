@@ -48,7 +48,7 @@ class CommandLineAcceptanceSpec {
         .build()
 
     private val expectedManifestKeys = listOf(
-        "Manifest-Version: 1.0",
+        "Manifest-Version:",
         "Main-Class:",
         "Implementation-Title:",
         "Implementation-Group:",
@@ -79,7 +79,6 @@ class CommandLineAcceptanceSpec {
             .isEqualTo(TaskOutcome.SUCCESS)
         assertThat(file("build/resources/main/META-INF/MANIFEST.MF").readText())
             .contains(expectedManifestKeys)
-        println(file("build/resources/main/META-INF/MANIFEST.MF").readText())
     }
 
     @Test
@@ -88,25 +87,6 @@ class CommandLineAcceptanceSpec {
         assertThat(result.task(":manifest")?.outcome)
             .isEqualTo(TaskOutcome.SUCCESS)
         assertThat(file("build/resources/main/META-INF/MANIFEST.MF").exists())
-            .isTrue()
-    }
-
-    @Test
-    fun `should generate manifest for idea output directory on manifest command`() {
-        project.projectDir.resolve(".idea").mkdir()
-        val result = runGradle(project, listOf("manifest"))
-        assertThat(result.task(":manifest")?.outcome)
-            .isEqualTo(TaskOutcome.SUCCESS)
-        assertThat(file("out/production/resources/META-INF/MANIFEST.MF").exists())
-            .isTrue()
-    }
-
-    @Test
-    fun `should generate manifest in src-main-resources on manifest command with --main flag`() {
-        val result = runGradle(project, listOf("manifest", "--main"))
-        assertThat(result.task(":manifest")?.outcome)
-            .isEqualTo(TaskOutcome.SUCCESS)
-        assertThat(file("src/main/resources/META-INF/MANIFEST.MF").exists())
             .isTrue()
     }
 

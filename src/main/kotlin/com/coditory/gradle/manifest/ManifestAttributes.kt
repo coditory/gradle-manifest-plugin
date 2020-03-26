@@ -31,7 +31,7 @@ internal object ManifestAttributes {
             "Built-JDK" to systemProperties("java.version", "java.vendor")
         )
             .plus(scmAttributes(project))
-            .filter { it.value != null && it.value != "" }
+            .filter { !it.value?.toString().isNullOrBlank() }
             .filter { !attributes.containsKey(it.key) }
             .forEach { attributes[it.key] = it.value }
     }

@@ -1,11 +1,9 @@
 package com.coditory.gradle.manifest
 
 import com.coditory.gradle.manifest.ManifestPlugin.Companion.GENERATE_MANIFEST_TASK
-import com.coditory.gradle.manifest.base.SpecProjectBuilder
 import com.coditory.gradle.manifest.base.SpecProjectBuilder.Companion.projectWithPlugins
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.api.plugins.JavaPlugin
-import org.gradle.internal.impldep.org.junit.After
 import org.gradle.language.jvm.tasks.ProcessResources
 import org.junit.jupiter.api.Test
 
@@ -21,10 +19,5 @@ class PluginSetupSpec {
             .named(JavaPlugin.PROCESS_RESOURCES_TASK_NAME, ProcessResources::class.java).get()
         assertThat(processResources.finalizedBy.getDependencies(processResources))
             .contains(task)
-    }
-
-    @After
-    fun removeProjectDirs() {
-        SpecProjectBuilder.removeProjectDirs()
     }
 }

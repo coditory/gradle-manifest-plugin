@@ -2,13 +2,11 @@ package com.coditory.gradle.manifest
 
 import com.coditory.gradle.manifest.base.ManifestExtractor.extractManifestAttributes
 import com.coditory.gradle.manifest.base.ManifestExtractor.extractManifestMap
-import com.coditory.gradle.manifest.base.SpecProjectBuilder
 import com.coditory.gradle.manifest.base.SpecProjectBuilder.Companion.projectWithPlugins
 import com.coditory.gradle.manifest.base.SpecRepository.Companion.repository
 import com.coditory.gradle.manifest.base.SystemProperties.withSystemProperties
 import com.coditory.gradle.manifest.base.SystemProperties.withoutSystemProperties
 import org.assertj.core.api.Assertions.assertThat
-import org.gradle.internal.impldep.org.junit.After
 import org.junit.jupiter.api.Test
 
 class SetupManifestAttributesSpec {
@@ -28,7 +26,6 @@ class SetupManifestAttributesSpec {
             mapOf(
                 "Built-Date" to "2015-12-03T10:15:30Z",
                 "Built-Host" to "localhost",
-                "Implementation-Group" to "",
                 "Implementation-Title" to "sample-project",
                 "Implementation-Version" to "unspecified",
                 "Manifest-Version" to "1.0"
@@ -73,6 +70,63 @@ class SetupManifestAttributesSpec {
                 "Manifest-Version" to "1.0"
             )
         )
+    }
+
+    @Test
+    fun `should skip empty properties`() {
+        // given
+        val project = projectWithPlugins("sample-project")
+            .withGroup("")
+            .withVersion("")
+            .withExtProperty("mainClassName", "")
+            .build()
+        val properties = mapOf(
+            "user.name" to "",
+            "java.version" to "",
+            "java.vendor" to "",
+            "os.arch" to "",
+            "os.name" to "",
+            "os.version" to ""
+        )
+
+        // when
+        val manifest = withSystemProperties(properties) {
+            extractManifestMap(project)
+        }
+
+        // then
+        assertThat(manifest).isEqualTo(
+            mapOf(
+                "Built-Date" to "2015-12-03T10:15:30Z",
+                "Built-Host" to "localhost",
+                "Implementation-Title" to "sample-project",
+                "Manifest-Version" to "1.0"
+            )
+        )
+    }
+
+    @Test
+    fun `should format partially empty properties`() {
+        // given
+        val project = projectWithPlugins("sample-project")
+            .build()
+        val properties = mapOf(
+            "java.version" to "11.0.6",
+            "java.vendor" to "",
+            "os.arch" to "",
+            "os.name" to "Linux",
+            "os.version" to ""
+        )
+
+        // when
+        val manifest = withSystemProperties(properties) {
+            extractManifestMap(project)
+        }
+
+        // then
+        assertThat(manifest)
+            .containsEntry("Built-OS", "Linux")
+            .containsEntry("Built-JDK", "11.0.6")
     }
 
     @Test
@@ -158,10 +212,5 @@ class SetupManifestAttributesSpec {
         assertThat(manifest["Main-Class"]).isEqualTo("com.acme.NewClassName")
         assertThat(manifest["Implementation-Group"]).isEqualTo("new.group.name")
         assertThat(manifest["Implementation-Version"]).isEqualTo("1.0.0-new-version")
-    }
-
-    @After
-    fun removeProjectDir() {
-        SpecProjectBuilder.removeProjectDirs()
     }
 }

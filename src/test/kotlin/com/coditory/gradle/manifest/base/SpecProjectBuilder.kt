@@ -81,18 +81,19 @@ class SpecProjectBuilder private constructor(projectDir: File, name: String) {
                 .withPlugins(JavaPlugin::class, ManifestPluginWithStubs::class)
         }
 
-        fun removeProjectDirs() {
-            projectDirs.forEach {
-                it.deleteRecursively()
-            }
-        }
-
         private fun createProjectDir(projectName: String): File {
+            removeProjectDirs()
             val projectParentDir = createTempDir()
             val projectDir = projectParentDir.resolve(projectName)
             projectDir.mkdir()
             projectDirs.add(projectDir)
             return projectDir
+        }
+
+        fun removeProjectDirs() {
+            projectDirs.forEach {
+                it.deleteRecursively()
+            }
         }
     }
 }
