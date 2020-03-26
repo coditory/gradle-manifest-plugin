@@ -35,14 +35,13 @@ dependencies {
 
 scmVersion {
     versionCreator("versionWithBranch")
-    tag.prefix = project.name
     hooks = HooksConfig().also {
         it.pre(
             "fileUpdate",
             mapOf(
-                "files" to listOf("readme.md") as Any,
-                "pattern" to KotlinClosure2<String, HookContext, String>({ v, _ -> v }),
-                "replacement" to KotlinClosure2<String, HookContext, String>({ v, _ -> v })
+                "files" to listOf("readme.md"),
+                "pattern" to KotlinClosure2({ v: String, _: HookContext -> v }),
+                "replacement" to KotlinClosure2({ v: String, _: HookContext -> v })
             )
         )
         it.pre("commit")

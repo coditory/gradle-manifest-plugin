@@ -1,10 +1,39 @@
 os: linux
 dist: bionic
+
 language: java
+jdk: openjdk11
 
-install: ./gradlew assemble
-script: ./gradlew check
-after_success: ./gradlew jacocoTestReport coveralls
+branches:
+  except:
+    - /^release-\d+\.\d+(\.\d+)?(-\S*)?$/
 
-jdk:
-  - openjdk11
+before_install:
+  - "mkdir -p ~/.gradle"
+  - "echo 'org.gradle.jvmargs=-Xmx1g -XX:MaxPermSize=256m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8' >> $HOME/.gradle/gradle.properties"
+  - "echo 'org.gradle.configureondemand=true' >> $HOME/.gradle/gradle.properties"
+  - "echo 'org.gradle.daemon=true' >> $HOME/.gradle/gradle.properties"
+  - "echo 'org.gradle.parallel=true' >> $HOME/.gradle/gradle.properties"
+
+install: echo "skip 'gradle assemble' step"
+script: ./gradlew build --scan --stacktrace
+after_success: bash .scripts/travis/coverage.sh
+
+# Try to release
+deploy:
+  provider: script
+  script: bash .scripts/travis/release.sh
+  on:
+    tags: false
+
+# Cache some gradle folders
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+notifications:
+  slack: coditory:q1sUsgYeeAGZ7KSogB9GZvjZ
