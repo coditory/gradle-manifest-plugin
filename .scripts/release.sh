@@ -5,9 +5,13 @@
 VERSION="${1:-PATCH}"
 
 publish() {
-  ./gradlew publishPlugins \
-    -Pgradle.publish.key=$GRADLE_PUBLISH_KEY \
-    -Pgradle.publish.secret=$GRADLE_PUBLISH_SECRET
+  if [[ -n "$GRADLE_PUBLISH_KEY" ]]; then
+    ./gradlew publishPlugins \
+      -Pgradle.publish.key=$GRADLE_PUBLISH_KEY \
+      -Pgradle.publish.secret=$GRADLE_PUBLISH_SECRET
+  else
+    ./gradlew publishPlugins
+  fi
 }
 
 release() {

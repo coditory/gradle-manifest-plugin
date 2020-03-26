@@ -3,14 +3,8 @@
 : ${GITHUB_TOKEN:?Exiting release: No GITHUB_TOKEN variable}
 : ${GRADLE_PUBLISH_KEY:?Exiting release: No GRADLE_PUBLISH_KEY variable}
 : ${GRADLE_PUBLISH_SECRET:?Exiting release: No GRADLE_PUBLISH_SECRET variable}
-export GPG_KEY_RING_FILE="$HOME/.gnupg/keyring.gpg"
 
-cleanup() {
-  rm -rf "$GPG_KEY_RING_FILE"
-}
-trap cleanup EXIT INT TERM
-
-if [[ -n "$RELEASE" ]]; then
+if [[ -z "$RELEASE" ]]; then
   echo "Exiting release: RELEASE env variable not found"
   exit 0;
 fi
