@@ -14,8 +14,9 @@ if [[ "$TRAVIS_BRANCH" != "master" ]] && [[ -n "$TRAVIS_PULL_REQUEST_SHA" ]]; th
   exit 0
 fi
 
-if git describe --tags --abbrev=0 | grep -Pq "^release-\d+(\.\d+){0,2}$"; then
-  echo "Exiting release: Current commmit is already tagged as a release $(git describe --tags --abbrev=0 | grep -P "^release-\d+(\.\d+){0,2}$")"
+RELEASE_TAG="$(git tag --points-at HEAD | grep -P "^release-\d+(\.\d+){0,2}$")"
+if [[ -n "$RELEASE_TAG" ]]; then
+  echo "Exiting release: Current commmit is already tagged as $RELEASE_TAG"
   exit 0
 fi
 
