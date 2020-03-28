@@ -4,10 +4,6 @@ dist: bionic
 language: java
 jdk: openjdk11
 
-branches:
-  except:
-    - /^release-\d+\.\d+(\.\d+)?(-\S*)?$/
-
 before_install:
   - "mkdir -p ~/.gradle"
   - "echo 'org.gradle.jvmargs=-Xmx1g -XX:MaxPermSize=256m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8' >> $HOME/.gradle/gradle.properties"
@@ -21,10 +17,11 @@ after_success: bash .scripts/travis/coverage.sh
 
 # Try to release
 deploy:
+  skip_cleanup: true
   provider: script
   script: bash .scripts/travis/release.sh
   on:
-    tags: false
+    branch: master
 
 # Cache some gradle folders
 before_cache:

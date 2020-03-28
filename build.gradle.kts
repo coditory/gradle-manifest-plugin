@@ -6,7 +6,7 @@ plugins {
     id("jacoco")
     id("pl.allegro.tech.build.axion-release") version "1.11.0"
     id("com.github.kt3k.coveralls") version "2.10.1"
-    id("com.gradle.plugin-publish") version "0.10.1"
+    id("com.gradle.plugin-publish") version "0.11.0"
     id("java-gradle-plugin")
     id("maven-publish")
     id("org.jlleitschuh.gradle.ktlint") version "9.2.1"
