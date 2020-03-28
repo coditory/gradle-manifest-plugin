@@ -1,5 +1,6 @@
 import pl.allegro.tech.build.axion.release.domain.hooks.HookContext
 import pl.allegro.tech.build.axion.release.domain.hooks.HooksConfig
+import pl.allegro.tech.build.axion.release.domain.scm.ScmPosition
 
 plugins {
     kotlin("jvm") version "1.3.70"
@@ -39,12 +40,12 @@ scmVersion {
         it.pre(
             "fileUpdate",
             mapOf(
-                "files" to listOf("readme.md"),
-                "pattern" to KotlinClosure2({ v: String, _: HookContext -> v }),
-                "replacement" to KotlinClosure2({ v: String, _: HookContext -> v })
+                "files" to listOf("readme.md") as Any,
+                "pattern" to KotlinClosure2<String, HookContext, String>({ v, _ -> v }),
+                "replacement" to KotlinClosure2<String, HookContext, String>({ v, _ -> v })
             )
         )
-        it.pre("commit")
+        it.pre("commit", KotlinClosure2<String, ScmPosition, String>({ v, _ -> "Release: $v [ci skip]" }))
     }
 }
 
