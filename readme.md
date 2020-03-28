@@ -5,7 +5,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/coditory/gradle-manifest-plugin/badge.svg)](https://coveralls.io/github/coditory/gradle-manifest-plugin)
 [![Gradle Plugin Portal](https://img.shields.io/badge/Plugin_Portal-v0.1.3-green.svg)](https://plugins.gradle.org/plugin/com.coditory.manifest)
 
-**Zero configuration**, **single responsibility** gradle plugin for generating project metadata to [`META-INF/MANIFEST.MF`](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html).
+**Zero configuration**, **single responsibility** gradle plugin for generating project metadata to [jar manifest file](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html).
 
 - Runs `manifest` task after [`processResources`](https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_tasks)
 - `manifest` task creates manifest file in `build/resources/main/META-INF/MANIFEST.MF` - [default output for java resources](https://docs.gradle.org/current/userguide/java_plugin.html#sec:source_set_properties)
@@ -35,6 +35,20 @@ For debug purposes you can run `manifest` task with some flags:
 # Generates manifest to src/main/resources/META-INF/MANIFEST.MF
 # Sometimes it's useful for debugging
 ./gradlew manifest --main
+```
+
+## Overriding generated attributes
+To override generated manifest attributes specify your own values in `build.gradle`
+
+```gradle
+jar {
+  manifest {
+    attributes(
+      'Implementation-Title': 'hello-world'
+      'Main-Class': 'hello.HelloWorld'
+    )
+  }
+}
 ```
 
 ## Generated manifests

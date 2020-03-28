@@ -33,4 +33,4 @@ cache:
     - $HOME/.gradle/wrapper/
 
 notifications:
-  slack: 'coditory:q1sUsgYeeAGZ7KSogB9GZvjZ'
+  slack: $SLACK
