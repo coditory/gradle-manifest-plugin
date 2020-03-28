@@ -5,6 +5,7 @@ import org.eclipse.jgit.lib.Constants.HEAD
 import org.gradle.api.Project
 import org.gradle.api.java.archives.Attributes
 import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.plugins.internal.DefaultBasePluginConvention
 import org.gradle.jvm.tasks.Jar
 import java.time.Clock
 import java.time.Instant
@@ -21,7 +22,7 @@ internal object ManifestAttributes {
     private fun fillAttributes(clock: Clock, hostNameResolver: HostNameResolver, project: Project, attributes: Attributes) {
         mapOf(
             "Main-Class" to orEmpty { project.properties["mainClassName"] },
-            "Implementation-Title" to lazy { project.name },
+            "Implementation-Title" to lazy { implementationTitle(project) },
             "Implementation-Group" to lazy { project.group },
             "Implementation-Version" to lazy { project.version },
             "Built-By" to systemProperties("user.name"),
@@ -34,6 +35,11 @@ internal object ManifestAttributes {
             .filter { !it.value?.toString().isNullOrBlank() }
             .filter { !attributes.containsKey(it.key) }
             .forEach { attributes[it.key] = it.value }
+    }
+
+    private fun implementationTitle(project: Project): String {
+        return project.convention.getPlugin(DefaultBasePluginConvention::class.java)
+            .archivesBaseName
     }
 
     private fun systemProperties(vararg names: String): String {
