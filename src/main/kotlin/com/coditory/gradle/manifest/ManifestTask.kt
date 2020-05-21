@@ -68,7 +68,6 @@ internal open class ManifestTask : DefaultTask() {
             .output.resourcesDir?.toPath() // Law of Demeter? xD
         if (resourcePath != null) {
             writeManifest(manifest, resourcePath)
-            writeManifestForIdea(manifest)
         }
     }
 
@@ -85,13 +84,6 @@ internal open class ManifestTask : DefaultTask() {
 
     private fun writeManifest(manifest: Manifest, resourcePath: Path) {
         manifest.writeTo(resourcePath.resolve(MANIFEST_PATH))
-    }
-
-    private fun writeManifestForIdea(manifest: Manifest) {
-        val isIdeaProject = project.rootDir.resolve(".idea").exists()
-        if (isIdeaProject) {
-            manifest.writeTo(project.projectDir.resolve("out/production/resources/$MANIFEST_PATH"))
-        }
     }
 
     companion object {

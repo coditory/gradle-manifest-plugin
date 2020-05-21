@@ -57,9 +57,6 @@ class GenerateManifestSpec {
         // then
         assertThat(file(project, "build/resources/main/META-INF/MANIFEST.MF").readText())
             .contains(expectedManifestKeys)
-        // and
-        assertThat(file(project, "out/production/resources/META-INF/MANIFEST.MF").readText())
-            .contains(expectedManifestKeys)
     }
 
     @Test
