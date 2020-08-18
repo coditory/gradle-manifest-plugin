@@ -72,6 +72,12 @@ class SpecProjectBuilder private constructor(projectDir: File, name: String) {
     companion object {
         private var projectDirs = mutableListOf<File>()
 
+        fun project(name: String = "sample-project", projectDir: File): SpecProjectBuilder {
+            projectDir.mkdir()
+            projectDirs.add(projectDir)
+            return SpecProjectBuilder(projectDir, name)
+        }
+
         fun project(name: String = "sample-project"): SpecProjectBuilder {
             return SpecProjectBuilder(createProjectDir(name), name)
         }
@@ -81,12 +87,12 @@ class SpecProjectBuilder private constructor(projectDir: File, name: String) {
                 .withPlugins(JavaPlugin::class, ManifestPluginWithStubs::class)
         }
 
-        private fun createProjectDir(projectName: String): File {
+        private fun createProjectDir(directory: String): File {
             removeProjectDirs()
             val projectParentDir = createTempDir()
-            val projectDir = projectParentDir.resolve(projectName)
+            val projectDir = projectParentDir.resolve(directory)
             projectDir.mkdir()
-            projectDirs.add(projectDir)
+            projectDirs.add(projectParentDir)
             return projectDir
         }
 

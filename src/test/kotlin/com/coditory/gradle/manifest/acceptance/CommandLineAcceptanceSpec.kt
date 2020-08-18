@@ -2,6 +2,7 @@ package com.coditory.gradle.manifest.acceptance
 
 import com.coditory.gradle.manifest.base.SpecProjectBuilder
 import com.coditory.gradle.manifest.base.SpecProjectRunner.runGradle
+import com.coditory.gradle.manifest.base.SpecRepository.Companion.COMMIT_MESSAGE
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.AfterEach
@@ -39,7 +40,7 @@ class CommandLineAcceptanceSpec {
 
             public class Application {
                 public static void main(String[] args) {
-                    System.out.println(">>> Application.main")
+                    System.out.println(">>> Application.main");
                 }
             }
             """.trimIndent()
@@ -68,7 +69,7 @@ class CommandLineAcceptanceSpec {
 
     @AfterEach
     fun removeProjectDir() {
-        project.projectDir.deleteRecursively()
+        SpecProjectBuilder.removeProjectDirs()
     }
 
     @ParameterizedTest(name = "should generate manifest on processResources command for gradle {0}")
@@ -79,6 +80,11 @@ class CommandLineAcceptanceSpec {
             .isEqualTo(TaskOutcome.SUCCESS)
         assertThat(file("build/resources/main/META-INF/MANIFEST.MF").readText())
             .contains(expectedManifestKeys)
+            .contains("Implementation-Title: sample-project")
+            .contains("Implementation-Group: com.coditory")
+            .contains("Implementation-Version: 0.0.1-SNAPSHOT")
+            .contains("SCM-Commit-Message: $COMMIT_MESSAGE")
+            .contains("Main-Class: com.coditory.Application")
     }
 
     @Test

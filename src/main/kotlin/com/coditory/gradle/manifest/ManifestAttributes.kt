@@ -60,7 +60,7 @@ internal object ManifestAttributes {
     }
 
     private fun gitAttributes(project: Project): Map<String, String?> {
-        val repository = Git.open(project.projectDir).repository
+        val repository = Git.open(project.rootProject.projectDir).repository
         val head = repository.parseCommit(repository.resolve(HEAD))
         return mapOf(
             "SCM-Repository" to orEmpty { repository.config.getString("remote", "origin", "url") },
