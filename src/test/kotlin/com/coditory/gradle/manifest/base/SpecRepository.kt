@@ -44,6 +44,7 @@ class SpecRepository private constructor(
         val personId = PersonIdent(authorName, authorEmail, Date.from(authorTime.toInstant()), TimeZone.getTimeZone(authorTime.zone))
         git.add().addFilepattern(filePath.absolutePath).call()
         git.commit()
+            .setSign(false)
             .setMessage(message)
             .setAuthor(personId)
             .call()
@@ -65,7 +66,8 @@ class SpecRepository private constructor(
 
         fun repository(project: Project): SpecRepository {
             val git = Git.init()
-                .setDirectory(project.rootDir).call()
+                .setDirectory(project.rootDir)
+                .call()
             return SpecRepository(project, git)
         }
     }
