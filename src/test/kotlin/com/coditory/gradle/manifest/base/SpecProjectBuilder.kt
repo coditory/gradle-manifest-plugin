@@ -7,6 +7,7 @@ import org.gradle.api.plugins.JavaPlugin
 import org.gradle.testfixtures.ProjectBuilder
 import java.io.File
 import java.nio.file.Files
+import kotlin.io.path.createTempDirectory
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSuperclassOf
 
@@ -87,9 +88,10 @@ class SpecProjectBuilder private constructor(projectDir: File, name: String) {
                 .withPlugins(JavaPlugin::class, ManifestPluginWithStubs::class)
         }
 
+        @Suppress("EXPERIMENTAL_API_USAGE_ERROR")
         private fun createProjectDir(directory: String): File {
             removeProjectDirs()
-            val projectParentDir = createTempDir()
+            val projectParentDir = createTempDirectory().toFile()
             val projectDir = projectParentDir.resolve(directory)
             projectDir.mkdir()
             projectDirs.add(projectParentDir)

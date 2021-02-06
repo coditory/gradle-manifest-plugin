@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.3.72"
+    kotlin("jvm") version "1.4.20"
     id("jacoco")
     id("com.github.kt3k.coveralls") version "2.10.2"
     id("com.gradle.plugin-publish") version "0.12.0"
@@ -24,10 +24,10 @@ dependencies {
     implementation(kotlin("reflect"))
     implementation("org.eclipse.jgit:org.eclipse.jgit:5.9.0.202009080501-r")
 
-    testImplementation("org.assertj:assertj-core:3.18.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
+    testImplementation("org.assertj:assertj-core:3.19.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
 }
 
 group = "com.coditory.gradle"
@@ -42,6 +42,7 @@ tasks.withType<Test> {
 
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
+        jvmTarget = "11"
         allWarningsAsErrors = true
     }
 }
@@ -66,10 +67,6 @@ gradlePlugin {
     }
 }
 
-// Marking new version (incrementPatch [default], incrementMinor, incrementMajor)
-// ./gradlew markNextVersion -Prelease.incrementer=incrementMinor
-// Releasing the plugin:
-// ./gradlew release && ./gradlew publishPlugins
 pluginBundle {
     website = "https://github.com/coditory/gradle-manifest-plugin"
     vcsUrl = "https://github.com/coditory/gradle-manifest-plugin"

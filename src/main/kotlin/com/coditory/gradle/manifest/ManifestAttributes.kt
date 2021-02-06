@@ -8,34 +8,61 @@ import org.gradle.api.logging.LogLevel.DEBUG
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.internal.DefaultBasePluginConvention
 import org.gradle.jvm.tasks.Jar
+import java.nio.file.Path
 import java.time.Clock
 import java.time.Instant
 import java.time.temporal.ChronoUnit.SECONDS
 
 internal object ManifestAttributes {
     @Suppress("UnstableApiUsage")
-    fun fillAttributes(clock: Clock, hostNameResolver: HostNameResolver, project: Project) {
+    fun fillAttributes(clock: Clock, hostNameResolver: HostNameResolver, project: Project, extension: ManifestPluginExtension) {
         project.tasks.named(JavaPlugin.JAR_TASK_NAME, Jar::class.java) {
-            fillAttributes(clock, hostNameResolver, project, it.manifest.attributes)
+            fillAttributes(clock, hostNameResolver, project, it.manifest.attributes, extension)
         }
     }
 
-    private fun fillAttributes(clock: Clock, hostNameResolver: HostNameResolver, project: Project, attributes: Attributes) {
+    private fun fillAttributes(
+        clock: Clock,
+        hostNameResolver: HostNameResolver,
+        project: Project,
+        attributes: Attributes,
+        extension: ManifestPluginExtension
+    ) {
         mapOf(
-            "Main-Class" to orEmpty { project.properties["mainClassName"] },
-            "Implementation-Title" to lazy { implementationTitle(project) },
-            "Implementation-Group" to lazy { project.group },
-            "Implementation-Version" to lazy { project.version },
-            "Built-By" to systemProperties("user.name"),
-            "Built-Host" to orEmpty { hostNameResolver.resolveHostName() },
-            "Built-Date" to format(clock.instant()),
-            "Built-OS" to systemProperties("os.name", "os.version", "os.arch"),
-            "Built-JDK" to systemProperties("java.version", "java.vendor")
+            "Main-Class" to orEmpty { project.properties["mainClassName"] }
         )
-            .plus(scmAttributes(project))
+            .plus(classpathAttribute(project, extension))
+            .plus(implementationAttributes(project, extension))
+            .plus(buildAttributes(clock, hostNameResolver, extension))
+            .plus(scmAttributes(project, extension))
+            .plus(customAttributes(extension))
             .filter { !it.value?.toString().isNullOrBlank() }
             .filter { !attributes.containsKey(it.key) }
             .forEach { attributes[it.key] = it.value }
+    }
+
+    private fun customAttributes(extension: ManifestPluginExtension): Map<String, Any?> {
+        val attributes = extension.attributes
+        if (attributes == null || attributes.isEmpty()) {
+            return mapOf()
+        }
+        return attributes.entries
+            .filter { it.key.isNotBlank() && it.value != null }
+            .map { it.key to orEmpty { it.value } }
+            .toMap()
+    }
+
+    private fun classpathAttribute(project: Project, extension: ManifestPluginExtension): Map<String, Any?> {
+        if (extension.classpathPrefix == null) {
+            return mapOf()
+        }
+        return mapOf(
+            "Class-Path" to orEmpty {
+                project.configurations.getByName("runtime")
+                    .map { Path.of(extension.classpathPrefix, it.name) }
+                    .joinToString(" ")
+            }
+        )
     }
 
     private fun implementationTitle(project: Project): String {
@@ -50,26 +77,56 @@ internal object ManifestAttributes {
             .joinToString(" ")
     }
 
-    private fun scmAttributes(project: Project): Map<String, String?> {
+    private fun implementationAttributes(
+        project: Project,
+        extension: ManifestPluginExtension
+    ): Map<String, Any?> {
+        if (!extension.implementationAttributes) {
+            return mapOf()
+        }
+        return mapOf(
+            "Implementation-Title" to lazy { implementationTitle(project) },
+            "Implementation-Group" to lazy { project.group },
+            "Implementation-Version" to lazy { project.version }
+        )
+    }
+
+    private fun buildAttributes(
+        clock: Clock,
+        hostNameResolver: HostNameResolver,
+        extension: ManifestPluginExtension
+    ): Map<String, String?> {
+        if (!extension.buildAttributes) {
+            return mapOf()
+        }
+        return mapOf(
+            "Built-By" to systemProperties("user.name"),
+            "Built-Host" to orEmpty { hostNameResolver.resolveHostName() },
+            "Built-Date" to format(clock.instant()),
+            "Built-OS" to systemProperties("os.name", "os.version", "os.arch"),
+            "Built-JDK" to systemProperties("java.version", "java.vendor")
+        )
+    }
+
+    private fun scmAttributes(project: Project, extension: ManifestPluginExtension): Map<String, String?> {
+        if (!extension.scmAttributes) {
+            return mapOf()
+        }
         return try {
-            gitAttributes(project)
+            val repository = Git.open(project.rootProject.projectDir).repository
+            val head = repository.parseCommit(repository.resolve(HEAD))
+            return mapOf(
+                "SCM-Repository" to orEmpty { repository.config.getString("remote", "origin", "url") },
+                "SCM-Branch" to orEmpty { repository.fullBranch },
+                "SCM-Commit-Message" to orEmpty { head.shortMessage },
+                "SCM-Commit-Hash" to orEmpty { head.name() },
+                "SCM-Commit-Author" to orEmpty { "${head.authorIdent.name} <${head.authorIdent.emailAddress}>" },
+                "SCM-Commit-Date" to orEmpty { format(head.authorIdent.`when`.toInstant()) }
+            )
         } catch (e: Throwable) {
             project.logger.log(DEBUG, "Could not resolve manifest SCM attributes. Using fallback.", e)
             mapOf()
         }
-    }
-
-    private fun gitAttributes(project: Project): Map<String, String?> {
-        val repository = Git.open(project.rootProject.projectDir).repository
-        val head = repository.parseCommit(repository.resolve(HEAD))
-        return mapOf(
-            "SCM-Repository" to orEmpty { repository.config.getString("remote", "origin", "url") },
-            "SCM-Branch" to orEmpty { repository.fullBranch },
-            "SCM-Commit-Message" to orEmpty { head.shortMessage },
-            "SCM-Commit-Hash" to orEmpty { head.name() },
-            "SCM-Commit-Author" to orEmpty { "${head.authorIdent.name} <${head.authorIdent.emailAddress}>" },
-            "SCM-Commit-Date" to orEmpty { format(head.authorIdent.`when`.toInstant()) }
-        )
     }
 
     private fun format(instant: Instant): String {

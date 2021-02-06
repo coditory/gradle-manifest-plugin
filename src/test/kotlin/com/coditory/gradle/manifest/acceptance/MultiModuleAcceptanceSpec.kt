@@ -1,8 +1,9 @@
 package com.coditory.gradle.manifest.acceptance
 
 import com.coditory.gradle.manifest.base.SpecProjectBuilder
-import com.coditory.gradle.manifest.base.SpecProjectRunner.runGradle
 import com.coditory.gradle.manifest.base.SpecRepository.Companion.COMMIT_MESSAGE
+import com.coditory.gradle.manifest.base.readFile
+import com.coditory.gradle.manifest.base.runGradle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
@@ -125,11 +126,11 @@ class MultiModuleAcceptanceSpec {
 
     @Test
     fun `should generate manifest on processResources command in sub project`() {
-        // when processResources is executed on parent project
-        runGradle(parentProject, listOf("processResources"))
+        // when
+        parentProject.runGradle(listOf("processResources"))
 
-        // then project-a has manifest plugin generated
-        assertThat(projectA.projectDir.resolve("build/resources/main/META-INF/MANIFEST.MF").readText())
+        // then
+        assertThat(projectA.readFile("build/resources/main/META-INF/MANIFEST.MF"))
             .contains(expectedManifestKeys)
             .contains("Implementation-Title: project-a")
             .contains("Implementation-Group: com.coditory")
@@ -137,8 +138,8 @@ class MultiModuleAcceptanceSpec {
             .contains("Main-Class: com.coditory.ProjectA")
             .contains("SCM-Commit-Message: $COMMIT_MESSAGE")
 
-        // and project-b has manifest plugin generated
-        assertThat(projectB.projectDir.resolve("build/resources/main/META-INF/MANIFEST.MF").readText())
+        // and
+        assertThat(projectB.readFile("build/resources/main/META-INF/MANIFEST.MF"))
             .contains(expectedManifestKeys)
             .contains("Implementation-Title: project-b")
             .contains("Implementation-Group: com.coditory")

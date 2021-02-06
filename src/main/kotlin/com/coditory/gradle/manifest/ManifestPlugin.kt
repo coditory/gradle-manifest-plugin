@@ -9,6 +9,7 @@ open class ManifestPlugin : ParameterizedManifestPlugin(
 ) {
     companion object {
         const val PLUGIN_ID = "com.coditory.manifest"
+        const val MANIFEST_EXTENSION = "manifest"
         const val GENERATE_MANIFEST_TASK = "manifest"
     }
 }

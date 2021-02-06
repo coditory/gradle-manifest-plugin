@@ -1,13 +1,12 @@
 package com.coditory.gradle.manifest
 
-import com.coditory.gradle.manifest.ManifestPlugin.Companion.GENERATE_MANIFEST_TASK
 import com.coditory.gradle.manifest.base.SpecProjectBuilder
 import com.coditory.gradle.manifest.base.SpecProjectBuilder.Companion.projectWithPlugins
 import com.coditory.gradle.manifest.base.SystemOutputCapturer.Companion.captureSystemOutput
+import com.coditory.gradle.manifest.base.getManifestTask
+import com.coditory.gradle.manifest.base.readFile
 import org.assertj.core.api.Assertions.assertThat
-import org.gradle.api.Project
 import org.junit.jupiter.api.Test
-import java.io.File
 
 class GenerateManifestSpec {
     private val expectedManifestKeys = listOf(
@@ -33,13 +32,13 @@ class GenerateManifestSpec {
     fun `should generate manifest to output`() {
         // given
         val project = projectBuilder().build()
-        val manifestTask = getManifestTask(project)
+        val manifestTask = project.getManifestTask()
 
         // when
         manifestTask.generateManifest()
 
         // then
-        assertThat(file(project, "build/resources/main/META-INF/MANIFEST.MF").readText())
+        assertThat(project.readFile("build/resources/main/META-INF/MANIFEST.MF"))
             .contains(expectedManifestKeys)
     }
 
@@ -49,13 +48,13 @@ class GenerateManifestSpec {
         val project = projectBuilder()
             .withIdeaProjectFiles()
             .build()
-        val manifestTask = getManifestTask(project)
+        val manifestTask = project.getManifestTask()
 
         // when
         manifestTask.generateManifest()
 
         // then
-        assertThat(file(project, "build/resources/main/META-INF/MANIFEST.MF").readText())
+        assertThat(project.readFile("build/resources/main/META-INF/MANIFEST.MF"))
             .contains(expectedManifestKeys)
     }
 
@@ -63,14 +62,14 @@ class GenerateManifestSpec {
     fun `should generate manifest to src-main-resources on --main option`() {
         // given
         val project = projectBuilder().build()
-        val manifestTask = getManifestTask(project)
+        val manifestTask = project.getManifestTask()
         manifestTask.setMain()
 
         // when
         manifestTask.generateManifest()
 
         // then
-        assertThat(file(project, "src/main/resources/META-INF/MANIFEST.MF").readText())
+        assertThat(project.readFile("src/main/resources/META-INF/MANIFEST.MF"))
             .contains(expectedManifestKeys)
     }
 
@@ -78,7 +77,7 @@ class GenerateManifestSpec {
     fun `should generate manifest and print it to stdout on --print option`() {
         // given
         val project = projectBuilder().build()
-        val manifestTask = getManifestTask(project)
+        val manifestTask = project.getManifestTask()
         manifestTask.setPrint(true)
 
         // when
@@ -89,8 +88,8 @@ class GenerateManifestSpec {
             }
 
         // then
-        assertThat(file(project, "build/resources/main/META-INF/MANIFEST.MF"))
-            .exists()
+        project.readFile("build/resources/main/META-INF/MANIFEST.MF")
+            .isNotEmpty()
 
         // and
         assertThat(output).contains(expectedManifestKeys)
@@ -101,16 +100,5 @@ class GenerateManifestSpec {
             .withGroup("com.coditory")
             .withGitRepository()
             .withExtProperty("mainClassName", "com.coditory.MainClass")
-    }
-
-    private fun getManifestTask(project: Project): ManifestTask {
-        return project.tasks
-            .named(GENERATE_MANIFEST_TASK, ManifestTask::class.java).get()
-    }
-
-    private fun file(project: Project, path: String): File {
-        return project.projectDir.resolve(path)
-            .toPath()
-            .toFile()
     }
 }

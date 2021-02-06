@@ -1,16 +1,12 @@
-rootProject.name = "manifest-plugin"
+plugins {
+    id("com.gradle.enterprise").version("3.5.2")
+}
 
 gradleEnterprise {
     buildScan {
         termsOfServiceUrl = "https://gradle.com/terms-of-service"
         termsOfServiceAgree = "yes"
-        if (!System.getenv("CI").isNullOrEmpty()) {
-            publishAlways()
-            tag("CI")
-        }
     }
 }
 
-plugins {
-    id("com.gradle.enterprise").version("3.3.1")
-}
+rootProject.name = "manifest-plugin"
