@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.1.10] - 2021-02-10
+### Added
+- Option to disable manifest attribute groups
+- Option to adding custom attributes
+- Option to generate classpath with custom directory prefix
+
 ## [0.1.9] - 2020-10-08
 ### Changed
 - Update dependencies and migrate to GitHub Actions.
