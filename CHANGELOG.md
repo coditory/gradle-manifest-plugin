@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.1.11] - 2021-02-10
+### Changed
+- Fixed configuration when generating classpath
+
 ## [0.1.10] - 2021-02-10
 ### Added
 - Option to disable manifest attribute groups
