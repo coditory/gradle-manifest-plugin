@@ -11,9 +11,8 @@ to [jar manifest file](https://docs.oracle.com/javase/tutorial/deployment/jar/ma
 - Runs `manifest` task
   after [`processResources`](https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_tasks)
 - `manifest` task creates manifest file in `build/resources/main/META-INF/MANIFEST.MF`
-    - [default output for java resources](https://docs.gradle.org/current/userguide/java_plugin.html#sec:source_set_properties)
 
-## Enabling the plugin
+## Installing the plugin
 
 Add to your `build.gradle`:
 
@@ -60,13 +59,12 @@ For debug purposes you can run `manifest` task with some flags:
 ./gradlew manifest --print
 
 # Generates manifest to src/main/resources/META-INF/MANIFEST.MF
-# Sometimes it's useful for debugging
 ./gradlew manifest --main
 ```
 
 ## Overriding generated attributes
 
-To disable or override generated manifest attributes specify configure the plugin in `build.gradle`
+To disable or override generated manifest attributes configure the plugin in `build.gradle`
 
 ```gradle
 manifest {
