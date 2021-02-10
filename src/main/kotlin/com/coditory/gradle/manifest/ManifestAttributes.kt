@@ -6,6 +6,7 @@ import org.gradle.api.Project
 import org.gradle.api.java.archives.Attributes
 import org.gradle.api.logging.LogLevel.DEBUG
 import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.plugins.JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME
 import org.gradle.api.plugins.internal.DefaultBasePluginConvention
 import org.gradle.jvm.tasks.Jar
 import java.nio.file.Path
@@ -58,7 +59,7 @@ internal object ManifestAttributes {
         }
         return mapOf(
             "Class-Path" to orEmpty {
-                project.configurations.getByName("runtime")
+                project.configurations.getByName(RUNTIME_CLASSPATH_CONFIGURATION_NAME)
                     .map { Path.of(extension.classpathPrefix, it.name) }
                     .joinToString(" ")
             }
