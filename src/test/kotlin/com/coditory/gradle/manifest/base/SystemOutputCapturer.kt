@@ -4,6 +4,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.PrintStream
 import java.util.UUID
+import kotlin.io.path.createTempDirectory
 
 internal class SystemOutputCapturer private constructor(
     private val outFile: File,
@@ -42,11 +43,12 @@ internal class SystemOutputCapturer private constructor(
         private val initialErr = System.err
 
         @Synchronized
+        @Suppress("EXPERIMENTAL_API_USAGE_ERROR")
         fun captureSystemOutput(): SystemOutputCapturer {
             if (System.out !== initialOut || System.err != initialErr) {
                 throw IllegalStateException("System output was already overridden")
             }
-            val tmpDir = createTempDir()
+            val tmpDir = createTempDirectory().toFile()
             val outFile = createTmpFile(tmpDir, "out.txt")
             val errFile = createTmpFile(tmpDir, "err.txt")
             val outStream = PrintStream(FileOutputStream(outFile))

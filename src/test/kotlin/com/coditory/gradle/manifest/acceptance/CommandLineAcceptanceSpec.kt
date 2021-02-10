@@ -1,15 +1,15 @@
 package com.coditory.gradle.manifest.acceptance
 
 import com.coditory.gradle.manifest.base.SpecProjectBuilder
-import com.coditory.gradle.manifest.base.SpecProjectRunner.runGradle
 import com.coditory.gradle.manifest.base.SpecRepository.Companion.COMMIT_MESSAGE
+import com.coditory.gradle.manifest.base.readFile
+import com.coditory.gradle.manifest.base.runGradle
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import java.io.File
 
 class CommandLineAcceptanceSpec {
     private val project = SpecProjectBuilder.project("sample-project")
@@ -75,10 +75,13 @@ class CommandLineAcceptanceSpec {
     @ParameterizedTest(name = "should generate manifest on processResources command for gradle {0}")
     @ValueSource(strings = ["current", "5.0"])
     fun `should generate manifest on processResources command`(gradleVersion: String?) {
-        val result = runGradle(project, listOf("processResources"), gradleVersion)
+        // when
+        val result = project.runGradle(listOf("processResources"), gradleVersion)
+        // then
         assertThat(result.task(":manifest")?.outcome)
             .isEqualTo(TaskOutcome.SUCCESS)
-        assertThat(file("build/resources/main/META-INF/MANIFEST.MF").readText())
+        // and
+        assertThat(project.readFile("build/resources/main/META-INF/MANIFEST.MF"))
             .contains(expectedManifestKeys)
             .contains("Implementation-Title: sample-project")
             .contains("Implementation-Group: com.coditory")
@@ -89,25 +92,25 @@ class CommandLineAcceptanceSpec {
 
     @Test
     fun `should generate manifest in output directory on manifest command`() {
-        val result = runGradle(project, listOf("manifest"))
+        // when
+        val result = project.runGradle(listOf("manifest"))
+        // then
         assertThat(result.task(":manifest")?.outcome)
             .isEqualTo(TaskOutcome.SUCCESS)
-        assertThat(file("build/resources/main/META-INF/MANIFEST.MF").exists())
-            .isTrue()
+        // and
+        assertThat(project.readFile("build/resources/main/META-INF/MANIFEST.MF"))
+            .isNotEmpty()
     }
 
     @Test
     fun `should print out manifest on manifest command with --print flag`() {
-        val result = runGradle(project, listOf("manifest", "--print"))
+        // when
+        val result = project.runGradle(listOf("manifest", "--print"))
+        // then
         assertThat(result.task(":manifest")?.outcome)
             .isEqualTo(TaskOutcome.SUCCESS)
+        // and
         assertThat(result.output)
             .contains(expectedManifestKeys)
-    }
-
-    private fun file(path: String): File {
-        return project.projectDir.resolve(path)
-            .toPath()
-            .toFile()
     }
 }

@@ -11,7 +11,7 @@ import org.gradle.api.tasks.options.Option
 import org.gradle.jvm.tasks.Jar
 import java.nio.file.Path
 
-internal open class ManifestTask : DefaultTask() {
+open class ManifestTask : DefaultTask() {
     private var print: Boolean = false
     private var main: Boolean = false
 
