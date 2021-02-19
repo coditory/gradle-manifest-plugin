@@ -1,6 +1,8 @@
 # Changelog
 
-## [Unreleased]
+## [0.1.12] - 2021-02-20
+### Changed
+- Use unix path separator for `Class-Path` attribute
 
 ## [0.1.11] - 2021-02-10
 ### Changed
@@ -20,7 +22,9 @@
 ### Changed
 - Fix SCM attributes generated in multi-module projects [#1](https://github.com/coditory/gradle-manifest-plugin/issues/1).
 
-[Unreleased]: https://github.com/coditory/gradle-manifest-plugin/compare/v0.1.10...HEAD
-[0.1.10]: https://github.com/coditory/gradle-manifest-plugin/compare/v0.1.10...HEAD
+[Unreleased]: https://github.com/coditory/gradle-manifest-plugin/compare/v0.1.12...HEAD
+[0.1.12]: https://github.com/coditory/gradle-manifest-plugin/compare/v0.1.11...v0.1.12
+[0.1.11]: https://github.com/coditory/gradle-manifest-plugin/compare/v0.1.10...v0.1.11
+[0.1.10]: https://github.com/coditory/gradle-manifest-plugin/compare/v0.1.9...v0.1.10
 [0.1.9]: https://github.com/coditory/gradle-manifest-plugin/compare/v0.1.8...v0.1.9
 [0.1.8]: https://github.com/coditory/gradle-manifest-plugin/compare/v0.1.7...v0.1.8

@@ -57,13 +57,10 @@ internal object ManifestAttributes {
         if (extension.classpathPrefix == null) {
             return mapOf()
         }
-        return mapOf(
-            "Class-Path" to orEmpty {
-                project.configurations.getByName(RUNTIME_CLASSPATH_CONFIGURATION_NAME)
-                    .map { Path.of(extension.classpathPrefix, it.name) }
-                    .joinToString(" ")
-            }
-        )
+        val classPath = project.configurations.getByName(RUNTIME_CLASSPATH_CONFIGURATION_NAME)
+            .map { Path.of(extension.classpathPrefix, it.name).toString() }
+            .joinToString(" ") { it.replace('\\', '/').replace("//+".toRegex(), "/") }
+        return mapOf("Class-Path" to classPath)
     }
 
     private fun implementationTitle(project: Project): String {
