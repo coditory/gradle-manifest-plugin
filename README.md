@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/coditory/gradle-manifest-plugin/workflows/Build/badge.svg?branch=master)](https://github.com/coditory/gradle-manifest-plugin/actions?query=workflow%3ABuild+branch%3Amaster)
 [![Coverage Status](https://coveralls.io/repos/github/coditory/gradle-manifest-plugin/badge.svg?branch=master)](https://coveralls.io/github/coditory/gradle-manifest-plugin?branch=master)
-[![Gradle Plugin Portal](https://img.shields.io/badge/Plugin_Portal-v0.1.11-green.svg)](https://plugins.gradle.org/plugin/com.coditory.manifest)
+[![Gradle Plugin Portal](https://img.shields.io/badge/Plugin_Portal-v0.1.12-green.svg)](https://plugins.gradle.org/plugin/com.coditory.manifest)
 [![Join the chat at https://gitter.im/coditory/gradle-manifest-plugin](https://badges.gitter.im/coditory/gradle-manifest-plugin.svg)](https://gitter.im/coditory/gradle-integration-test-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 **Single responsibility** gradle plugin for generating project metadata
@@ -18,7 +18,7 @@ Add to your `build.gradle`:
 
 ```gradle
 plugins {
-  id 'com.coditory.manifest' version '0.1.11'
+  id 'com.coditory.manifest' version '0.1.12'
 }
 ```
 
