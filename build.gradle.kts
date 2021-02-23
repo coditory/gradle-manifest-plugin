@@ -42,7 +42,7 @@ tasks.withType<Test> {
 
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "1.8"
         allWarningsAsErrors = true
     }
 }

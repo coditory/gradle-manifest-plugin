@@ -9,7 +9,7 @@ import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME
 import org.gradle.api.plugins.internal.DefaultBasePluginConvention
 import org.gradle.jvm.tasks.Jar
-import java.nio.file.Path
+import java.nio.file.Paths
 import java.time.Clock
 import java.time.Instant
 import java.time.temporal.ChronoUnit.SECONDS
@@ -29,17 +29,17 @@ internal object ManifestAttributes {
         attributes: Attributes,
         extension: ManifestPluginExtension
     ) {
-        mapOf(
+        val generated = mapOf(
             "Main-Class" to orEmpty { project.properties["mainClassName"] }
         )
-            .plus(classpathAttribute(project, extension))
             .plus(implementationAttributes(project, extension))
             .plus(buildAttributes(clock, hostNameResolver, extension))
             .plus(scmAttributes(project, extension))
             .plus(customAttributes(extension))
+            .plus(classpathAttribute(project, extension))
             .filter { !it.value?.toString().isNullOrBlank() }
             .filter { !attributes.containsKey(it.key) }
-            .forEach { attributes[it.key] = it.value }
+        attributes.putAll(generated)
     }
 
     private fun customAttributes(extension: ManifestPluginExtension): Map<String, Any?> {
@@ -54,11 +54,9 @@ internal object ManifestAttributes {
     }
 
     private fun classpathAttribute(project: Project, extension: ManifestPluginExtension): Map<String, Any?> {
-        if (extension.classpathPrefix == null) {
-            return mapOf()
-        }
+        val classpathPrefix = extension.classpathPrefix ?: return mapOf()
         val classPath = project.configurations.getByName(RUNTIME_CLASSPATH_CONFIGURATION_NAME)
-            .map { Path.of(extension.classpathPrefix, it.name).toString() }
+            .map { Paths.get(classpathPrefix, it.name).toString() }
             .joinToString(" ") { it.replace('\\', '/').replace("//+".toRegex(), "/") }
         return mapOf("Class-Path" to classPath)
     }

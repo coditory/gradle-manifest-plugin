@@ -10,6 +10,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
+import java.util.regex.Pattern.DOTALL
 
 class GenerateClasspathSpec {
     @AfterEach
@@ -40,8 +41,8 @@ class GenerateClasspathSpec {
 
                 dependencies {
                     compile 'org.springframework.boot:spring-boot-starter:2.4.2'
-                    implementation 'com.coditory.quark:quark-context:0.1.2'
-                    runtime 'com.coditory.logback:logback-filters:0.1.0'
+                    implementation 'com.github.slugify:slugify:2.4'
+                    runtime 'org.hashids:hashids:1.0.3'
                     testCompile 'org.junit.jupiter:junit-jupiter-api:5.7.0'
                 }
             """
@@ -58,24 +59,25 @@ class GenerateClasspathSpec {
         // and
         val manifest = project.readFile("build/resources/main/META-INF/MANIFEST.MF")
         assertThat(manifest.replace("\r\n ", ""))
-            .contains("my/jars/quark-context-0.1.2.jar")
-            .contains("my/jars/logback-filters-0.1.0.jar")
+            .contains("my/jars/slugify-2.4.jar")
+            .contains("my/jars/hashids-1.0.3.jar")
             .contains("my/jars/spring-boot-starter-2.4.2.jar")
 
-        // and
+        // and:
         assertThat(manifest)
             .contains(
-                "Class-Path: my/jars/spring-boot-starter-2.4.2.jar my/jars/quark-context-\r\n" +
-                    " 0.1.2.jar my/jars/logback-filters-0.1.0.jar my/jars/spring-boot-autocon\r\n" +
-                    " figure-2.4.2.jar my/jars/spring-boot-2.4.2.jar my/jars/spring-boot-star\r\n" +
-                    " ter-logging-2.4.2.jar my/jars/jakarta.annotation-api-1.3.5.jar my/jars/\r\n" +
-                    " spring-context-5.3.3.jar my/jars/spring-aop-5.3.3.jar my/jars/spring-be\r\n" +
-                    " ans-5.3.3.jar my/jars/spring-expression-5.3.3.jar my/jars/spring-core-5\r\n" +
-                    " .3.3.jar my/jars/snakeyaml-1.27.jar my/jars/logback-classic-1.2.3.jar m\r\n" +
-                    " y/jars/log4j-to-slf4j-2.13.3.jar my/jars/jul-to-slf4j-1.7.30.jar my/jar\r\n" +
-                    " s/slf4j-api-1.7.30.jar my/jars/annotations-16.0.1.jar my/jars/spring-jc\r\n" +
-                    " l-5.3.3.jar my/jars/logback-core-1.2.3.jar my/jars/log4j-api-2.13.3.jar"
+                "Class-Path: my/jars/spring-boot-starter-2.4.2.jar my/jars/slugify-2.4.\r\n" +
+                    " jar my/jars/hashids-1.0.3.jar my/jars/spring-boot-autoconfigure-2.4.2\r\n" +
+                    " .jar my/jars/spring-boot-2.4.2.jar my/jars/spring-boot-starter-loggin\r\n" +
+                    " g-2.4.2.jar my/jars/jakarta.annotation-api-1.3.5.jar my/jars/spring-c\r\n" +
+                    " ontext-5.3.3.jar my/jars/spring-aop-5.3.3.jar my/jars/spring-beans-5.\r\n" +
+                    " 3.3.jar my/jars/spring-expression-5.3.3.jar my/jars/spring-core-5.3.3\r\n" +
+                    " .jar my/jars/snakeyaml-1.27.jar my/jars/icu4j-64.2.jar my/jars/logbac\r\n" +
+                    " k-classic-1.2.3.jar my/jars/log4j-to-slf4j-2.13.3.jar my/jars/jul-to-\r\n" +
+                    " slf4j-1.7.30.jar my/jars/spring-jcl-5.3.3.jar my/jars/logback-core-1.\r\n" +
+                    " 2.3.jar my/jars/slf4j-api-1.7.30.jar my/jars/log4j-api-2.13.3.jar\r\n"
             )
+            .matches(".*Class-Path: [^:]+(Built-JDK: [^:]+)?$".toPattern(DOTALL))
     }
 
     @Test
@@ -99,7 +101,7 @@ class GenerateClasspathSpec {
                 }
 
                 dependencies {
-                    compile 'com.coditory.quark:quark-context:0.1.2'
+                    compile 'com.github.slugify:slugify:2.4'
                 }
             """
             )
@@ -115,6 +117,6 @@ class GenerateClasspathSpec {
         // and
         val manifest = project.readFile("build/resources/main/META-INF/MANIFEST.MF")
         assertThat(manifest.replace("\r\n ", ""))
-            .contains("my/important/jars/quark-context-0.1.2.jar")
+            .contains("my/important/jars/slugify-2.4.jar")
     }
 }
