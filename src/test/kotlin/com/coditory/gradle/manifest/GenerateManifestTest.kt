@@ -1,14 +1,14 @@
 package com.coditory.gradle.manifest
 
-import com.coditory.gradle.manifest.base.SpecProjectBuilder
-import com.coditory.gradle.manifest.base.SpecProjectBuilder.Companion.projectWithPlugins
 import com.coditory.gradle.manifest.base.SystemOutputCapturer.Companion.captureSystemOutput
+import com.coditory.gradle.manifest.base.TestProjectBuilder
+import com.coditory.gradle.manifest.base.TestProjectBuilder.Companion.projectWithPlugins
 import com.coditory.gradle.manifest.base.getManifestTask
 import com.coditory.gradle.manifest.base.readFile
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class GenerateManifestSpec {
+class GenerateManifestTest {
     private val expectedManifestKeys = listOf(
         "Manifest-Version:",
         "Main-Class:",
@@ -95,7 +95,7 @@ class GenerateManifestSpec {
         assertThat(output).contains(expectedManifestKeys)
     }
 
-    private fun projectBuilder(): SpecProjectBuilder {
+    private fun projectBuilder(): TestProjectBuilder {
         return projectWithPlugins("sample-project")
             .withGroup("com.coditory")
             .withGitRepository()

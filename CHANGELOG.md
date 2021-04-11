@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.1.14] - 2021-04-11
+### Changed
+- Updated dependencies for Gradle v7
+
 ## [0.1.13] - 2021-02-23
 ### Changed
 - Support Java 1.8 [#9](https://github.com/coditory/gradle-manifest-plugin/issues/9)
@@ -27,8 +31,9 @@
 ### Changed
 - Fix SCM attributes generated in multi-module projects [#1](https://github.com/coditory/gradle-manifest-plugin/issues/1).
 
-[Unreleased]: https://github.com/coditory/gradle-manifest-plugin/compare/v0.1.13...HEAD
-[0.1.12]: https://github.com/coditory/gradle-manifest-plugin/compare/v0.1.12...v0.1.13
+[Unreleased]: https://github.com/coditory/gradle-manifest-plugin/compare/v0.1.14...HEAD
+[0.1.14]: https://github.com/coditory/gradle-manifest-plugin/compare/v0.1.13...v0.1.14
+[0.1.13]: https://github.com/coditory/gradle-manifest-plugin/compare/v0.1.12...v0.1.13
 [0.1.12]: https://github.com/coditory/gradle-manifest-plugin/compare/v0.1.11...v0.1.12
 [0.1.11]: https://github.com/coditory/gradle-manifest-plugin/compare/v0.1.10...v0.1.11
 [0.1.10]: https://github.com/coditory/gradle-manifest-plugin/compare/v0.1.9...v0.1.10

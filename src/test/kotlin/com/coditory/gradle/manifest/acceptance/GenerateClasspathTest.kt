@@ -1,7 +1,7 @@
 package com.coditory.gradle.manifest.acceptance
 
-import com.coditory.gradle.manifest.base.SpecProjectBuilder
-import com.coditory.gradle.manifest.base.SpecProjectBuilder.Companion.projectWithPlugins
+import com.coditory.gradle.manifest.base.TestProjectBuilder
+import com.coditory.gradle.manifest.base.TestProjectBuilder.Companion.projectWithPlugins
 import com.coditory.gradle.manifest.base.readFile
 import com.coditory.gradle.manifest.base.runGradle
 import org.assertj.core.api.Assertions.assertThat
@@ -12,10 +12,10 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import java.util.regex.Pattern.DOTALL
 
-class GenerateClasspathSpec {
+class GenerateClasspathTest {
     @AfterEach
     fun removeProjectDir() {
-        SpecProjectBuilder.removeProjectDirs()
+        TestProjectBuilder.removeProjectDirs()
     }
 
     @ParameterizedTest(name = "should generate manifest with classpath for gradle {0}")
@@ -40,10 +40,9 @@ class GenerateClasspathSpec {
                 }
 
                 dependencies {
-                    compile 'org.springframework.boot:spring-boot-starter:2.4.2'
                     implementation 'com.github.slugify:slugify:2.4'
-                    runtime 'org.hashids:hashids:1.0.3'
-                    testCompile 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+                    runtimeOnly 'org.hashids:hashids:1.0.3'
+                    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
                 }
             """
             )
@@ -59,24 +58,7 @@ class GenerateClasspathSpec {
         // and
         val manifest = project.readFile("build/resources/main/META-INF/MANIFEST.MF")
         assertThat(manifest.replace("\r\n ", ""))
-            .contains("my/jars/slugify-2.4.jar")
-            .contains("my/jars/hashids-1.0.3.jar")
-            .contains("my/jars/spring-boot-starter-2.4.2.jar")
-
-        // and:
-        assertThat(manifest)
-            .contains(
-                "Class-Path: my/jars/spring-boot-starter-2.4.2.jar my/jars/slugify-2.4.\r\n" +
-                    " jar my/jars/hashids-1.0.3.jar my/jars/spring-boot-autoconfigure-2.4.2\r\n" +
-                    " .jar my/jars/spring-boot-2.4.2.jar my/jars/spring-boot-starter-loggin\r\n" +
-                    " g-2.4.2.jar my/jars/jakarta.annotation-api-1.3.5.jar my/jars/spring-c\r\n" +
-                    " ontext-5.3.3.jar my/jars/spring-aop-5.3.3.jar my/jars/spring-beans-5.\r\n" +
-                    " 3.3.jar my/jars/spring-expression-5.3.3.jar my/jars/spring-core-5.3.3\r\n" +
-                    " .jar my/jars/snakeyaml-1.27.jar my/jars/icu4j-64.2.jar my/jars/logbac\r\n" +
-                    " k-classic-1.2.3.jar my/jars/log4j-to-slf4j-2.13.3.jar my/jars/jul-to-\r\n" +
-                    " slf4j-1.7.30.jar my/jars/spring-jcl-5.3.3.jar my/jars/logback-core-1.\r\n" +
-                    " 2.3.jar my/jars/slf4j-api-1.7.30.jar my/jars/log4j-api-2.13.3.jar\r\n"
-            )
+            .contains("Class-Path: my/jars/slugify-2.4.jar my/jars/hashids-1.0.3.jar my/jars/icu4j-64.2.jar\r\n")
             .matches(".*Class-Path: [^:]+(Built-JDK: [^:]+)?$".toPattern(DOTALL))
     }
 
@@ -101,7 +83,7 @@ class GenerateClasspathSpec {
                 }
 
                 dependencies {
-                    compile 'com.github.slugify:slugify:2.4'
+                    implementation 'com.github.slugify:slugify:2.4'
                 }
             """
             )

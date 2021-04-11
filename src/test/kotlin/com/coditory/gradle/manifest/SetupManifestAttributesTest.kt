@@ -2,14 +2,14 @@ package com.coditory.gradle.manifest
 
 import com.coditory.gradle.manifest.base.ManifestExtractor.extractManifestAttributes
 import com.coditory.gradle.manifest.base.ManifestExtractor.extractManifestMap
-import com.coditory.gradle.manifest.base.SpecProjectBuilder.Companion.projectWithPlugins
-import com.coditory.gradle.manifest.base.SpecRepository.Companion.repository
 import com.coditory.gradle.manifest.base.SystemProperties.withSystemProperties
 import com.coditory.gradle.manifest.base.SystemProperties.withoutSystemProperties
+import com.coditory.gradle.manifest.base.TestProjectBuilder.Companion.projectWithPlugins
+import com.coditory.gradle.manifest.base.TestRepository.Companion.repository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class SetupManifestAttributesSpec {
+class SetupManifestAttributesTest {
     @Test
     fun `should generate basic attributes for bare bone project with no git and no system properties`() {
         // given

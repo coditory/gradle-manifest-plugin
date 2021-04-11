@@ -1,7 +1,7 @@
 package com.coditory.gradle.manifest.acceptance
 
-import com.coditory.gradle.manifest.base.SpecProjectBuilder
-import com.coditory.gradle.manifest.base.SpecRepository.Companion.COMMIT_MESSAGE
+import com.coditory.gradle.manifest.base.TestProjectBuilder
+import com.coditory.gradle.manifest.base.TestRepository.Companion.COMMIT_MESSAGE
 import com.coditory.gradle.manifest.base.readFile
 import com.coditory.gradle.manifest.base.runGradle
 import org.assertj.core.api.Assertions.assertThat
@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
-class CommandLineAcceptanceSpec {
-    private val project = SpecProjectBuilder.project("sample-project")
+class CommandLineAcceptanceTest {
+    private val project = TestProjectBuilder.project("sample-project")
         .withBuildGradle(
             """
             plugins {
@@ -69,7 +69,7 @@ class CommandLineAcceptanceSpec {
 
     @AfterEach
     fun removeProjectDir() {
-        SpecProjectBuilder.removeProjectDirs()
+        TestProjectBuilder.removeProjectDirs()
     }
 
     @ParameterizedTest(name = "should generate manifest on processResources command for gradle {0}")

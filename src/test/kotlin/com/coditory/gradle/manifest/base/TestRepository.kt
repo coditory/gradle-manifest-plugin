@@ -12,7 +12,7 @@ import java.util.Date
 import java.util.TimeZone
 import java.util.UUID
 
-class SpecRepository private constructor(
+class TestRepository private constructor(
     private val project: Project,
     private val git: Git
 ) {
@@ -20,7 +20,7 @@ class SpecRepository private constructor(
     fun withRemote(
         name: String = REMOTE_NAME,
         url: String = REMOTE_URL
-    ): SpecRepository {
+    ): TestRepository {
         val config = git.repository.config
         val remoteConfig = RemoteConfig(config, name)
         remoteConfig.addURI(URIish(url))
@@ -34,7 +34,7 @@ class SpecRepository private constructor(
         authorName: String = AUTHOR_NAME,
         authorEmail: String = AUTHOR_EMAIL,
         authorTime: ZonedDateTime = AUTHOR_TIME
-    ): SpecRepository {
+    ): TestRepository {
         val uuid = UUID.randomUUID().toString()
         val filePath = project.rootDir.resolve("samples/$uuid")
         filePath.parentFile.mkdirs()
@@ -64,11 +64,11 @@ class SpecRepository private constructor(
         const val AUTHOR_EMAIL = "john.doe@acme.com"
         val AUTHOR_TIME: ZonedDateTime = ZonedDateTime.parse("2020-03-24T20:46:03.242102+01:00")
 
-        fun repository(project: Project): SpecRepository {
+        fun repository(project: Project): TestRepository {
             val git = Git.init()
                 .setDirectory(project.rootDir)
                 .call()
-            return SpecRepository(project, git)
+            return TestRepository(project, git)
         }
     }
 }

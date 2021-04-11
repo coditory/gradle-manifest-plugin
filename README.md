@@ -96,6 +96,6 @@ on [Adding Classes and Jars to Jar File's Classpath](https://docs.oracle.com/jav
 Take a look at a [gradle-manifest-plugin-sample](https://github.com/coditory/gradle-manifest-plugin-sample).
 You can copy [ManifestReader.java](https://github.com/coditory/gradle-manifest-plugin-sample/blob/master/src/main/java/com/coditory/sandbox/ManifestReader.java) (with [tests](https://github.com/coditory/gradle-manifest-plugin-sample/blob/master/src/test/groovy/com/coditory/sandbox/ManifestReaderTest.groovy)) to you own project.
 
-Reading `MANIFEST.MF` is tricky. There can be mupltiple `MANIFEST.MF` files on the classpath that comes from libraries.
+Reading `MANIFEST.MF` is tricky. There can be multiple `MANIFEST.MF` files on the classpath that comes from libraries.
 To read the correct `MANIFEST.MF` you need to filter them. Most often `Implementation-Title` is used to find the correct one.
 

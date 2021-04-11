@@ -1,13 +1,13 @@
 package com.coditory.gradle.manifest
 
 import com.coditory.gradle.manifest.ManifestPlugin.Companion.GENERATE_MANIFEST_TASK
-import com.coditory.gradle.manifest.base.SpecProjectBuilder.Companion.projectWithPlugins
+import com.coditory.gradle.manifest.base.TestProjectBuilder.Companion.projectWithPlugins
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.language.jvm.tasks.ProcessResources
 import org.junit.jupiter.api.Test
 
-class PluginSetupSpec {
+class PluginSetupTest {
     private val project = projectWithPlugins()
         .build()
 

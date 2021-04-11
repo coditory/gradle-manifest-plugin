@@ -1,12 +1,12 @@
 package com.coditory.gradle.manifest
 
-import com.coditory.gradle.manifest.base.SpecProjectBuilder
+import com.coditory.gradle.manifest.base.TestProjectBuilder
 import com.coditory.gradle.manifest.base.generateManifest
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.api.Project
 import org.junit.jupiter.api.Test
 
-class GenerateManifestWithoutDisabledAttributesSpec {
+class GenerateManifestWithoutDisabledAttributesTest {
     @Test
     fun `should generate manifest without scm attributes`() {
         // when
@@ -41,7 +41,7 @@ class GenerateManifestWithoutDisabledAttributesSpec {
     }
 
     private fun project(): Project {
-        return SpecProjectBuilder.projectWithPlugins()
+        return TestProjectBuilder.projectWithPlugins()
             .withGroup("com.coditory")
             .withGitRepository()
             .withExtProperty("mainClassName", "com.coditory.MainClass")

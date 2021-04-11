@@ -1,7 +1,7 @@
 package com.coditory.gradle.manifest.acceptance
 
-import com.coditory.gradle.manifest.base.SpecProjectBuilder
-import com.coditory.gradle.manifest.base.SpecProjectBuilder.Companion.projectWithPlugins
+import com.coditory.gradle.manifest.base.TestProjectBuilder
+import com.coditory.gradle.manifest.base.TestProjectBuilder.Companion.projectWithPlugins
 import com.coditory.gradle.manifest.base.readFile
 import com.coditory.gradle.manifest.base.runGradle
 import org.assertj.core.api.Assertions.assertThat
@@ -10,10 +10,10 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
-class GenerateWithCustomAttributesSpec {
+class GenerateWithCustomAttributesTest {
     @AfterEach
     fun removeProjectDir() {
-        SpecProjectBuilder.removeProjectDirs()
+        TestProjectBuilder.removeProjectDirs()
     }
 
     @ParameterizedTest(name = "should generate manifest with custom attributes for gradle {0}")
@@ -47,8 +47,8 @@ class GenerateWithCustomAttributesSpec {
                 }
 
                 dependencies {
-                    compile 'org.springframework.boot:spring-boot-starter:2.4.2'
-                    testCompile 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+                    compileOnly 'org.springframework.boot:spring-boot-starter:2.4.2'
+                    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
                 }
             """
             )

@@ -1,15 +1,15 @@
 package com.coditory.gradle.manifest.acceptance
 
-import com.coditory.gradle.manifest.base.SpecProjectBuilder
-import com.coditory.gradle.manifest.base.SpecRepository.Companion.COMMIT_MESSAGE
+import com.coditory.gradle.manifest.base.TestProjectBuilder
+import com.coditory.gradle.manifest.base.TestRepository.Companion.COMMIT_MESSAGE
 import com.coditory.gradle.manifest.base.readFile
 import com.coditory.gradle.manifest.base.runGradle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 
-class MultiModuleAcceptanceSpec {
-    private val parentProject = SpecProjectBuilder.project("parent-project")
+class MultiModuleAcceptanceTest {
+    private val parentProject = TestProjectBuilder.project("parent-project")
         .withBuildGradle(
             """
             plugins {
@@ -38,7 +38,7 @@ class MultiModuleAcceptanceSpec {
         .withGitRepository()
         .build()
 
-    private val projectA = SpecProjectBuilder.project("project-a", parentProject.projectDir.resolve("project-a"))
+    private val projectA = TestProjectBuilder.project("project-a", parentProject.projectDir.resolve("project-a"))
         .withBuildGradle(
             """
             plugins {
@@ -69,7 +69,7 @@ class MultiModuleAcceptanceSpec {
         )
         .build()
 
-    private val projectB = SpecProjectBuilder.project("project-b", parentProject.projectDir.resolve("project-b"))
+    private val projectB = TestProjectBuilder.project("project-b", parentProject.projectDir.resolve("project-b"))
         .withBuildGradle(
             """
             plugins {
@@ -121,7 +121,7 @@ class MultiModuleAcceptanceSpec {
 
     @AfterEach
     fun removeProjectDir() {
-        SpecProjectBuilder.removeProjectDirs()
+        TestProjectBuilder.removeProjectDirs()
     }
 
     @Test
