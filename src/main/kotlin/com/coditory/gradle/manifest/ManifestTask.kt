@@ -3,7 +3,6 @@ package com.coditory.gradle.manifest
 import org.gradle.api.DefaultTask
 import org.gradle.api.java.archives.Manifest
 import org.gradle.api.plugins.JavaPlugin.JAR_TASK_NAME
-import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.SourceSet.MAIN_SOURCE_SET_NAME
 import org.gradle.api.tasks.TaskAction
@@ -62,9 +61,8 @@ open class ManifestTask : DefaultTask() {
     }
 
     private fun generateManifestToOutput(manifest: Manifest) {
-        val resourcePath = project
-            .convention.getPlugin(JavaPluginConvention::class.java)
-            .sourceSets.getByName(MAIN_SOURCE_SET_NAME)
+        val resourcePath = BackwardCompatibilities.sourceSets(project)
+            .getByName(MAIN_SOURCE_SET_NAME)
             .output.resourcesDir?.toPath() // Law of Demeter? xD
         if (resourcePath != null) {
             writeManifest(manifest, resourcePath)
@@ -72,9 +70,8 @@ open class ManifestTask : DefaultTask() {
     }
 
     private fun generateManifestToResources(manifest: Manifest) {
-        val resourcePath = project
-            .convention.getPlugin(JavaPluginConvention::class.java)
-            .sourceSets.getByName(MAIN_SOURCE_SET_NAME)
+        val resourcePath = BackwardCompatibilities.sourceSets(project)
+            .getByName(MAIN_SOURCE_SET_NAME)
             .resources.srcDirs
             .firstOrNull()
         if (resourcePath != null) {

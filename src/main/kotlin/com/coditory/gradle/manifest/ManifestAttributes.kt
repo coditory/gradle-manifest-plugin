@@ -7,7 +7,6 @@ import org.gradle.api.java.archives.Attributes
 import org.gradle.api.logging.LogLevel.DEBUG
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME
-import org.gradle.api.plugins.internal.DefaultBasePluginConvention
 import org.gradle.jvm.tasks.Jar
 import java.nio.file.Paths
 import java.time.Clock
@@ -49,8 +48,7 @@ internal object ManifestAttributes {
         }
         return attributes.entries
             .filter { it.key.isNotBlank() && it.value != null }
-            .map { it.key to orEmpty { it.value } }
-            .toMap()
+            .associate { it.key to orEmpty { it.value } }
     }
 
     private fun classpathAttribute(project: Project, extension: ManifestPluginExtension): Map<String, Any?> {
@@ -62,8 +60,7 @@ internal object ManifestAttributes {
     }
 
     private fun implementationTitle(project: Project): String {
-        return project.convention.getPlugin(DefaultBasePluginConvention::class.java)
-            .archivesBaseName
+        return BackwardCompatibilities.archivesBaseName(project)
     }
 
     private fun systemProperties(vararg names: String): String {
