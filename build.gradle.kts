@@ -22,7 +22,7 @@ dependencies {
     implementation(gradleApi())
     // implementation(kotlin("stdlib-jdk8"))
     // implementation(kotlin("reflect"))
-    implementation("org.eclipse.jgit:org.eclipse.jgit:6.2.0.202206071550-r")
+    implementation("org.eclipse.jgit:org.eclipse.jgit:6.3.0.202209071007-r")
 
     testImplementation("org.assertj:assertj-core:3.23.1")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
