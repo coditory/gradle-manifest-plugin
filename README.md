@@ -75,8 +75,20 @@ manifest {
         "Custom-1": "Custom-Value",
         "Custom-2": 123
     ]
+    filterAttributes = [
+        "Implementation-*",
+        "SCM-*",
+        "!SCM-Commit-*"
+        "!Implementation-Variant"
+    ]
 }
 ```
+
+Attribute filtering with `filterAttributes` enables blacklisting and whitelisting.
+Attribute passes the filter if it is covered by any the whitelist entries and none of the blacklist entries.
+It also uses a naive patterns:
+- `!` at the beginning of the string means it's blacklisted
+- `*` are replaced with `.*` in standard regex terminology
 
 ## Generating classpath attribute
 

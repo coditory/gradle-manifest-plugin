@@ -28,6 +28,7 @@ internal object ManifestAttributes {
         attributes: Attributes,
         extension: ManifestPluginExtension
     ) {
+        val filterPredicate = createFilterPredicate(extension)
         val generated = mapOf(
             "Main-Class" to orEmpty { project.properties["mainClassName"] }
         )
@@ -37,8 +38,25 @@ internal object ManifestAttributes {
             .plus(customAttributes(extension))
             .plus(classpathAttribute(project, extension))
             .filter { !it.value?.toString().isNullOrBlank() }
-            .filter { !attributes.containsKey(it.key) }
+            .filter { filterPredicate(it.key) }
         attributes.putAll(generated)
+    }
+
+    private fun createFilterPredicate(extension: ManifestPluginExtension): (String) -> Boolean {
+        val whitelist: List<Regex> = extension.attributesFilter
+            ?.filter { !it.startsWith("!") }
+            ?.map { "^" + it.replace("*", ".*") }
+            ?.map { it.toRegex(RegexOption.IGNORE_CASE)  }
+            ?: emptyList()
+        val blacklist: List<Regex> = extension.attributesFilter
+            ?.filter { it.startsWith("!") }
+            ?.map { "^" + it.substring(1).replace("*", ".*") }
+            ?.map { it.toRegex(RegexOption.IGNORE_CASE)  }
+            ?: emptyList()
+        return { text: String ->
+            (whitelist.isEmpty() || whitelist.any { it.matches(text) } )
+                && (blacklist.isEmpty() || blacklist.none { it.matches(text) })
+        }
     }
 
     private fun customAttributes(extension: ManifestPluginExtension): Map<String, Any?> {

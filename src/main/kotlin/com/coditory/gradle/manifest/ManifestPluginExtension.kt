@@ -6,4 +6,5 @@ open class ManifestPluginExtension {
     var implementationAttributes: Boolean = true
     var buildAttributes: Boolean = true
     var scmAttributes: Boolean = true
+    var attributesFilter: List<String>? = null
 }
