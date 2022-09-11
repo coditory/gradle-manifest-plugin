@@ -1,6 +1,6 @@
 # Manifest Gradle Plugin
 
-[![Build Status](https://github.com/coditory/gradle-manifest-plugin/workflows/Build/badge.svg?branch=master)](https://github.com/coditory/gradle-manifest-plugin/actions?query=workflow%3ABuild+branch%3Amaster)
+[![Build](https://github.com/coditory/gradle-manifest-plugin/actions/workflows/build.yml/badge.svg)](https://github.com/coditory/gradle-manifest-plugin/actions/workflows/build.yml)
 [![Coverage Status](https://coveralls.io/repos/github/coditory/gradle-manifest-plugin/badge.svg?branch=master)](https://coveralls.io/github/coditory/gradle-manifest-plugin?branch=master)
 [![Gradle Plugin Portal](https://img.shields.io/badge/Plugin_Portal-v0.2.0-green.svg)](https://plugins.gradle.org/plugin/com.coditory.manifest)
 [![Join the chat at https://gitter.im/coditory/gradle-manifest-plugin](https://badges.gitter.im/coditory/gradle-manifest-plugin.svg)](https://gitter.im/coditory/gradle-integration-test-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)

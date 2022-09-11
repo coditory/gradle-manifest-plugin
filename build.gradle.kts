@@ -4,10 +4,10 @@ plugins {
     kotlin("jvm") version "1.6.20"
     id("jacoco")
     id("com.github.kt3k.coveralls") version "2.12.0"
-    id("com.gradle.plugin-publish") version "1.0.0-rc-2"
+    id("com.gradle.plugin-publish") version "1.0.0"
     id("java-gradle-plugin")
     id("maven-publish")
-    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
+    id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
 }
 
 repositories {
@@ -22,19 +22,19 @@ dependencies {
     implementation(gradleApi())
     // implementation(kotlin("stdlib-jdk8"))
     // implementation(kotlin("reflect"))
-    implementation("org.eclipse.jgit:org.eclipse.jgit:5.9.0.202009080501-r")
+    implementation("org.eclipse.jgit:org.eclipse.jgit:6.2.0.202206071550-r")
 
-    testImplementation("org.assertj:assertj-core:3.22.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+    testImplementation("org.assertj:assertj-core:3.23.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.0")
 }
 
 group = "com.coditory.gradle"
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(8))
+        languageVersion.set(JavaLanguageVersion.of(11))
     }
 }
 
@@ -48,7 +48,6 @@ tasks.withType<Test> {
 
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
-        jvmTarget = "1.8"
         allWarningsAsErrors = true
     }
 }

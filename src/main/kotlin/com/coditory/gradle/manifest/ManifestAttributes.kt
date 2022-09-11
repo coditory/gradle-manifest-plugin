@@ -4,7 +4,7 @@ import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.lib.Constants.HEAD
 import org.gradle.api.Project
 import org.gradle.api.java.archives.Attributes
-import org.gradle.api.logging.LogLevel.DEBUG
+import org.gradle.api.logging.LogLevel.INFO
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME
 import org.gradle.jvm.tasks.Jar
@@ -117,7 +117,7 @@ internal object ManifestAttributes {
                 "SCM-Commit-Date" to orEmpty { format(head.authorIdent.`when`.toInstant()) }
             )
         } catch (e: Throwable) {
-            project.logger.log(DEBUG, "Could not resolve manifest SCM attributes. Using fallback.", e)
+            project.logger.log(INFO, "Could not resolve manifest SCM attributes. Using fallback.", e)
             mapOf()
         }
     }
