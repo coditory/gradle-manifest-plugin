@@ -14,7 +14,6 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit.SECONDS
 
 internal object ManifestAttributes {
-    @Suppress("UnstableApiUsage")
     fun fillAttributes(clock: Clock, hostNameResolver: HostNameResolver, project: Project, extension: ManifestPluginExtension) {
         project.tasks.named(JavaPlugin.JAR_TASK_NAME, Jar::class.java) {
             fillAttributes(clock, hostNameResolver, project, it.manifest.attributes, extension)
@@ -36,14 +35,15 @@ internal object ManifestAttributes {
             .plus(scmAttributes(project, extension))
             .plus(customAttributes(extension))
             .plus(classpathAttribute(project, extension))
-            .filter { !it.value?.toString().isNullOrBlank() }
             .filter { !attributes.containsKey(it.key) }
+            .map { it.key to it.value?.toString()?.trim() }
+            .filter { !it.second.isNullOrBlank() }
         attributes.putAll(generated)
     }
 
     private fun customAttributes(extension: ManifestPluginExtension): Map<String, Any?> {
         val attributes = extension.attributes
-        if (attributes == null || attributes.isEmpty()) {
+        if (attributes.isNullOrEmpty()) {
             return mapOf()
         }
         return attributes.entries
@@ -65,7 +65,7 @@ internal object ManifestAttributes {
 
     private fun systemProperties(vararg names: String): String {
         return names
-            .map { System.getProperty(it) }
+            .map { System.getProperty(it)?.trim() }
             .filter { !it.isNullOrBlank() }
             .joinToString(" ")
     }
@@ -113,7 +113,7 @@ internal object ManifestAttributes {
                 "SCM-Branch" to orEmpty { repository.fullBranch },
                 "SCM-Commit-Message" to orEmpty { head.shortMessage },
                 "SCM-Commit-Hash" to orEmpty { head.name() },
-                "SCM-Commit-Author" to orEmpty { "${head.authorIdent.name} <${head.authorIdent.emailAddress}>" },
+                "SCM-Commit-Author" to orEmpty { "${head.authorIdent.name.trim()} <${head.authorIdent.emailAddress.trim()}>" },
                 "SCM-Commit-Date" to orEmpty { format(head.authorIdent.`when`.toInstant()) }
             )
         } catch (e: Throwable) {
