@@ -31,7 +31,6 @@ open class ParameterizedManifestPlugin(
         setupGenerateManifestTask(project)
     }
 
-    @Suppress("UnstableApiUsage")
     private fun setupGenerateManifestTask(project: Project) {
         val manifestTask = project.tasks.register(GENERATE_MANIFEST_TASK, ManifestTask::class.java) {
             it.description = "Generates META-INF/MANIFEST.MF in resources directory with project metadata"

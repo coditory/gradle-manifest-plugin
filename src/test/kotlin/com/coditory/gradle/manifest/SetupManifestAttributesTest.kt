@@ -34,6 +34,27 @@ class SetupManifestAttributesTest {
     }
 
     @Test
+    fun `should trim attribute values`() {
+        // given
+        val project = projectWithPlugins("sample-project")
+            .build()
+        val properties = mapOf(
+            "user.name" to "  john.doe  ",
+            "java.version" to "\n11.0.6\t\n",
+            "java.vendor" to " \n\t  AdoptOpenJDK\n\t  "
+        )
+
+        // when
+        val manifest = withSystemProperties(properties) {
+            extractManifestMap(project)
+        }
+
+        // then
+        assertThat(manifest["Built-By"]).isEqualTo("john.doe")
+        assertThat(manifest["Built-JDK"]).isEqualTo("11.0.6 AdoptOpenJDK")
+    }
+
+    @Test
     fun `should generate attributes from project and system properties`() {
         // given
         val project = projectWithPlugins("sample-project")

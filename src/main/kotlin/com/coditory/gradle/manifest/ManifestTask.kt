@@ -34,7 +34,6 @@ open class ManifestTask : DefaultTask() {
         return main
     }
 
-    @Suppress("UnstableApiUsage")
     @TaskAction
     fun generateManifest() {
         val manifest = project.tasks
