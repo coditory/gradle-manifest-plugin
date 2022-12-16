@@ -2,7 +2,7 @@
 
 [![Build](https://github.com/coditory/gradle-manifest-plugin/actions/workflows/build.yml/badge.svg)](https://github.com/coditory/gradle-manifest-plugin/actions/workflows/build.yml)
 [![Coverage Status](https://coveralls.io/repos/github/coditory/gradle-manifest-plugin/badge.svg?branch=master)](https://coveralls.io/github/coditory/gradle-manifest-plugin?branch=master)
-[![Gradle Plugin Portal](https://img.shields.io/badge/Plugin_Portal-v0.2.2-green.svg)](https://plugins.gradle.org/plugin/com.coditory.manifest)
+[![Gradle Plugin Portal](https://img.shields.io/badge/Plugin_Portal-v0.2.3-green.svg)](https://plugins.gradle.org/plugin/com.coditory.manifest)
 
 **Single responsibility** gradle plugin for generating project metadata
 to [jar manifest file](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html).
@@ -17,7 +17,7 @@ Add to your `build.gradle`:
 
 ```gradle
 plugins {
-  id 'com.coditory.manifest' version '0.2.2'
+  id 'com.coditory.manifest' version '0.2.3'
 }
 ```
 
