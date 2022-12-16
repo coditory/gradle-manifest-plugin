@@ -19,7 +19,7 @@ class GenerateClasspathTest {
     }
 
     @ParameterizedTest(name = "should generate manifest with classpath for gradle {0}")
-    @ValueSource(strings = ["current", "5.0"])
+    @ValueSource(strings = ["current", "6.0"])
     fun `should generate classpath`(gradleVersion: String?) {
         // given
         val project = projectWithPlugins()

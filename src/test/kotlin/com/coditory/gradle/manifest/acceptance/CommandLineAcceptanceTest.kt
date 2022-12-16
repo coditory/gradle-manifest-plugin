@@ -73,7 +73,7 @@ class CommandLineAcceptanceTest {
     }
 
     @ParameterizedTest(name = "should generate manifest on processResources command for gradle {0}")
-    @ValueSource(strings = ["current", "5.0"])
+    @ValueSource(strings = ["current", "6.0"])
     fun `should generate manifest on processResources command`(gradleVersion: String?) {
         // when
         val result = project.runGradle(listOf("processResources"), gradleVersion)

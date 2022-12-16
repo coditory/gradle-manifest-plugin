@@ -17,7 +17,7 @@ class GenerateWithCustomAttributesTest {
     }
 
     @ParameterizedTest(name = "should generate manifest with custom attributes for gradle {0}")
-    @ValueSource(strings = ["current", "5.0"])
+    @ValueSource(strings = ["current", "6.0"])
     fun `should generate manifest with custom attributes`(gradleVersion: String?) {
         // given
         val project = projectWithPlugins()

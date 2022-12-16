@@ -20,14 +20,12 @@ ktlint {
 
 dependencies {
     implementation(gradleApi())
-    // implementation(kotlin("stdlib-jdk8"))
-    // implementation(kotlin("reflect"))
-    implementation("org.eclipse.jgit:org.eclipse.jgit:6.3.0.202209071007-r")
+    implementation("org.eclipse.jgit:org.eclipse.jgit:6.4.0.202211300538-r")
 
     testImplementation("org.assertj:assertj-core:3.23.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.1")
 }
 
 group = "com.coditory.gradle"
