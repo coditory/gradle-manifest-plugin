@@ -1,7 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.8.0"
+    // https://docs.gradle.org/current/userguide/compatibility.html
+    kotlin("jvm") version "1.7.10"
     id("jacoco")
     id("com.github.kt3k.coveralls") version "2.12.0"
     id("com.gradle.plugin-publish") version "1.1.0"

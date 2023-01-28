@@ -5,7 +5,7 @@ import java.time.Clock
 
 open class ManifestPlugin : ParameterizedManifestPlugin(
     clock = Clock.systemUTC(),
-    hostNameResolver = INET_HOST_NAME_RESOLVER
+    hostNameResolver = INET_HOST_NAME_RESOLVER,
 ) {
     companion object {
         const val PLUGIN_ID = "com.coditory.manifest"

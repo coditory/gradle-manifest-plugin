@@ -25,10 +25,10 @@ internal object ManifestAttributes {
         hostNameResolver: HostNameResolver,
         project: Project,
         attributes: Attributes,
-        extension: ManifestPluginExtension
+        extension: ManifestPluginExtension,
     ) {
         val generated = mapOf(
-            "Main-Class" to orEmpty { project.properties["mainClassName"] }
+            "Main-Class" to orEmpty { project.properties["mainClassName"] },
         )
             .plus(implementationAttributes(project, extension))
             .plus(buildAttributes(clock, hostNameResolver, extension))
@@ -72,7 +72,7 @@ internal object ManifestAttributes {
 
     private fun implementationAttributes(
         project: Project,
-        extension: ManifestPluginExtension
+        extension: ManifestPluginExtension,
     ): Map<String, Any?> {
         if (!extension.implementationAttributes) {
             return mapOf()
@@ -80,7 +80,7 @@ internal object ManifestAttributes {
         return mapOf(
             "Implementation-Title" to lazy { implementationTitle(project) },
             "Implementation-Group" to lazy { project.group },
-            "Implementation-Version" to lazy { project.version }
+            "Implementation-Version" to lazy { project.version },
         )
     }
 
@@ -97,7 +97,7 @@ internal object ManifestAttributes {
             "Built-Host" to orEmpty { hostNameResolver.resolveHostName() },
             "Built-Date" to format(clock.instant()),
             "Built-OS" to systemProperties("os.name", "os.version", "os.arch"),
-            "Built-JDK" to systemProperties("java.version", "java.vendor")
+            "Built-JDK" to systemProperties("java.version", "java.vendor"),
         )
     }
 
@@ -114,7 +114,7 @@ internal object ManifestAttributes {
                 "SCM-Commit-Message" to orEmpty { head.shortMessage },
                 "SCM-Commit-Hash" to orEmpty { head.name() },
                 "SCM-Commit-Author" to orEmpty { "${head.authorIdent.name.trim()} <${head.authorIdent.emailAddress.trim()}>" },
-                "SCM-Commit-Date" to orEmpty { format(head.authorIdent.`when`.toInstant()) }
+                "SCM-Commit-Date" to orEmpty { format(head.authorIdent.`when`.toInstant()) },
             )
         } catch (e: Throwable) {
             project.logger.log(INFO, "Could not resolve manifest SCM attributes. Using fallback.", e)

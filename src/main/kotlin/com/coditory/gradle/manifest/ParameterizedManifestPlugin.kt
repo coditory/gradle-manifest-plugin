@@ -11,7 +11,7 @@ import java.time.Clock
 
 open class ParameterizedManifestPlugin(
     private val clock: Clock,
-    private val hostNameResolver: HostNameResolver
+    private val hostNameResolver: HostNameResolver,
 ) : Plugin<Project> {
 
     override fun apply(project: Project) {
