@@ -10,7 +10,7 @@ class GenerateManifestWithoutDisabledAttributesTest {
     @Test
     fun `should generate manifest without scm attributes`() {
         // when
-        val manifest = project().generateManifest { it.scmAttributes = false }
+        val manifest = project().generateManifest { it.scmAttributes.set(false) }
         // then
         assertThat(manifest)
             .contains("Implementation-")
@@ -21,7 +21,7 @@ class GenerateManifestWithoutDisabledAttributesTest {
     @Test
     fun `should generate manifest without build attributes`() {
         // when
-        val manifest = project().generateManifest { it.buildAttributes = false }
+        val manifest = project().generateManifest { it.buildAttributes.set(false) }
         // then
         assertThat(manifest)
             .contains("Implementation-")
@@ -32,7 +32,7 @@ class GenerateManifestWithoutDisabledAttributesTest {
     @Test
     fun `should generate manifest without implementation attributes`() {
         // when
-        val manifest = project().generateManifest { it.implementationAttributes = false }
+        val manifest = project().generateManifest { it.implementationAttributes.set(false) }
         // then
         assertThat(manifest)
             .doesNotContain("Implementation-")

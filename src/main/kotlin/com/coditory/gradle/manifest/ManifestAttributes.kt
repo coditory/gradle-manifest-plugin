@@ -7,6 +7,8 @@ import org.gradle.api.java.archives.Attributes
 import org.gradle.api.logging.LogLevel.INFO
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME
+import org.gradle.api.provider.Property
+import org.gradle.api.provider.Provider
 import org.gradle.jvm.tasks.Jar
 import java.nio.file.Paths
 import java.time.Clock
@@ -42,17 +44,14 @@ internal object ManifestAttributes {
     }
 
     private fun customAttributes(extension: ManifestPluginExtension): Map<String, Any?> {
-        val attributes = extension.attributes
-        if (attributes.isNullOrEmpty()) {
-            return mapOf()
-        }
+        val attributes = extension.attributes.orNull ?: return mapOf()
         return attributes.entries
             .filter { it.key.isNotBlank() && it.value != null }
             .associate { it.key to orEmpty { it.value } }
     }
 
     private fun classpathAttribute(project: Project, extension: ManifestPluginExtension): Map<String, Any?> {
-        val classpathPrefix = extension.classpathPrefix ?: return mapOf()
+        val classpathPrefix = extension.classpathPrefix.orNull ?: return mapOf()
         val classPath = project.configurations.getByName(RUNTIME_CLASSPATH_CONFIGURATION_NAME)
             .map { Paths.get(classpathPrefix, it.name).toString() }
             .joinToString(" ") { it.replace('\\', '/').replace("//+".toRegex(), "/") }
@@ -70,11 +69,15 @@ internal object ManifestAttributes {
             .joinToString(" ")
     }
 
+    private fun isSetAndFalse(property: Property<Boolean>): Boolean {
+        return !property.getOrElse(true)
+    }
+
     private fun implementationAttributes(
         project: Project,
         extension: ManifestPluginExtension,
     ): Map<String, Any?> {
-        if (!extension.implementationAttributes) {
+        if (isSetAndFalse(extension.implementationAttributes)) {
             return mapOf()
         }
         return mapOf(
@@ -89,7 +92,7 @@ internal object ManifestAttributes {
         hostNameResolver: HostNameResolver,
         extension: ManifestPluginExtension
     ): Map<String, String?> {
-        if (!extension.buildAttributes) {
+        if (isSetAndFalse(extension.buildAttributes)) {
             return mapOf()
         }
         return mapOf(
@@ -102,7 +105,7 @@ internal object ManifestAttributes {
     }
 
     private fun scmAttributes(project: Project, extension: ManifestPluginExtension): Map<String, String?> {
-        if (!extension.scmAttributes) {
+        if (isSetAndFalse(extension.scmAttributes)) {
             return mapOf()
         }
         return try {
@@ -136,9 +139,16 @@ internal object ManifestAttributes {
 
     private fun orEmpty(provider: () -> Any?): String {
         return try {
-            provider()?.toString() ?: ""
+            unwrapGradleProvider(provider())?.toString() ?: ""
         } catch (e: Throwable) {
             ""
+        }
+    }
+
+    private fun unwrapGradleProvider(value: Any?): Any? {
+        return when (value) {
+            is Provider<*> -> value.orNull
+            else -> value
         }
     }
 }
