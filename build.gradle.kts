@@ -21,7 +21,7 @@ ktlint {
 
 dependencies {
     implementation(gradleApi())
-    implementation("org.eclipse.jgit:org.eclipse.jgit:6.4.0.202211300538-r")
+    implementation("org.eclipse.jgit:org.eclipse.jgit:6.5.0.202303070854-r")
 
     testImplementation("org.assertj:assertj-core:3.24.2")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
