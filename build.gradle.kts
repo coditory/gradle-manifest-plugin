@@ -23,7 +23,7 @@ dependencies {
     implementation(gradleApi())
     implementation("org.eclipse.jgit:org.eclipse.jgit:6.9.0.202403050737-r")
 
-    testImplementation("org.assertj:assertj-core:3.25.3")
+    testImplementation("org.assertj:assertj-core:3.26.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.2")
