@@ -1,8 +1,9 @@
 # Manifest Gradle Plugin
 
 [![Build](https://github.com/coditory/gradle-manifest-plugin/actions/workflows/build.yml/badge.svg)](https://github.com/coditory/gradle-manifest-plugin/actions/workflows/build.yml)
-[![Coverage Status](https://coveralls.io/repos/github/coditory/gradle-manifest-plugin/badge.svg?branch=master)](https://coveralls.io/github/coditory/gradle-manifest-plugin?branch=master)
-[![Gradle Plugin Portal](https://img.shields.io/badge/Plugin_Portal-v0.2.6-green.svg)](https://plugins.gradle.org/plugin/com.coditory.manifest)
+[![Coverage](https://codecov.io/gh/coditory/gradle-manifest-plugin/branch/main/graph/badge.svg)](https://codecov.io/gh/coditory/gradle-manifest-plugin)
+[![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/com.coditory.manifest)](https://plugins.gradle.org/plugin/com.coditory.manifest)
+
 
 **Single responsibility** gradle plugin for generating project metadata
 to [jar manifest file](https://docs.oracle.com/javase/tutorial/deployment/jar/manifestindex.html).

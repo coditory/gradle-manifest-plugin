@@ -59,7 +59,8 @@ internal object ManifestAttributes {
     }
 
     private fun implementationTitle(project: Project): String {
-        return BackwardCompatibilities.archivesBaseName(project)
+        return project.extensions.getByType(org.gradle.api.plugins.BasePluginExtension::class.java)
+            .archivesName.get()
     }
 
     private fun systemProperties(vararg names: String): String {

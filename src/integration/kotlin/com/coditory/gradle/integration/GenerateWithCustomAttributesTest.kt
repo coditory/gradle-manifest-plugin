@@ -2,13 +2,15 @@ package com.coditory.gradle.integration
 
 import com.coditory.gradle.manifest.base.GradleTestVersions.GRADLE_MAX_SUPPORTED_VERSION
 import com.coditory.gradle.manifest.base.GradleTestVersions.GRADLE_MIN_SUPPORTED_VERSION
+import com.coditory.gradle.manifest.base.TestProject
 import com.coditory.gradle.manifest.base.TestProjectBuilder
-import com.coditory.gradle.manifest.base.readFile
-import com.coditory.gradle.manifest.base.runGradle
+import com.coditory.gradle.manifest.base.Versions
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.testkit.runner.TaskOutcome
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
+import kotlin.collections.forEach
 
 class GenerateWithCustomAttributesTest {
     @ParameterizedTest(name = "should generate manifest with custom attributes for gradle {0}")
@@ -42,12 +44,13 @@ class GenerateWithCustomAttributesTest {
                 }
 
                 dependencies {
-                    compileOnly("org.springframework.boot:spring-boot-starter:2.4.2")
-                    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
+                    compileOnly("org.springframework.boot:spring-boot-starter:${Versions.spring}")
+                    testImplementation("org.junit.jupiter:junit-jupiter-api:${Versions.junit}")
                 }
             """,
             )
             .build()
+        deferCleanUp(project)
 
         // when
         val result = project.runGradle(listOf("processResources"), gradleVersion)
@@ -66,5 +69,20 @@ class GenerateWithCustomAttributesTest {
             .doesNotContain("Main-Class")
             .doesNotContain("Built-")
             .doesNotContain("SCM-")
+    }
+
+    companion object {
+        private val projects: MutableList<TestProject> = mutableListOf()
+
+        @Synchronized
+        fun deferCleanUp(project: TestProject) {
+            projects.add(project)
+        }
+
+        @AfterAll
+        @JvmStatic
+        fun cleanUp() {
+            projects.forEach { it.close() }
+        }
     }
 }

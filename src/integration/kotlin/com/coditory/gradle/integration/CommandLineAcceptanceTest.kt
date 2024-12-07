@@ -4,7 +4,6 @@ import com.coditory.gradle.manifest.base.GradleTestVersions.GRADLE_MAX_SUPPORTED
 import com.coditory.gradle.manifest.base.GradleTestVersions.GRADLE_MIN_SUPPORTED_VERSION
 import com.coditory.gradle.manifest.base.TestProjectBuilder
 import com.coditory.gradle.manifest.base.TestRepository.Companion.COMMIT_MESSAGE
-import com.coditory.gradle.manifest.base.readFile
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.AfterEach
@@ -118,5 +117,17 @@ class CommandLineAcceptanceTest {
         // and
         assertThat(result.output)
             .contains(expectedManifestKeys)
+    }
+
+    @Test
+    fun `should work with build cache`() {
+        // when
+        val result = project.runGradle(listOf("manifest", "--build-cache"))
+        // then
+        assertThat(result.task(":manifest")?.outcome)
+            .isEqualTo(TaskOutcome.SUCCESS)
+        // and
+        assertThat(project.readFile("build/resources/main/META-INF/MANIFEST.MF"))
+            .isNotEmpty()
     }
 }

@@ -2,7 +2,6 @@ package com.coditory.gradle.integration
 
 import com.coditory.gradle.manifest.base.TestProjectBuilder
 import com.coditory.gradle.manifest.base.TestRepository.Companion.COMMIT_MESSAGE
-import com.coditory.gradle.manifest.base.readFile
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test

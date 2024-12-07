@@ -11,7 +11,6 @@ class PluginSetupTest {
     private val project = projectWithPlugins()
         .build()
 
-    @Suppress("UnstableApiUsage")
     @Test
     fun `should register manifest task to run after processResources`() {
         val task = project.tasks.getByName(GENERATE_MANIFEST_TASK)

@@ -1,10 +1,12 @@
 package com.coditory.gradle.manifest
 
 import org.gradle.api.DefaultTask
+import org.gradle.api.Project
 import org.gradle.api.java.archives.Manifest
 import org.gradle.api.plugins.JavaPlugin.JAR_TASK_NAME
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.SourceSet.MAIN_SOURCE_SET_NAME
+import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
 import org.gradle.jvm.tasks.Jar
@@ -60,7 +62,7 @@ open class ManifestTask : DefaultTask() {
     }
 
     private fun generateManifestToOutput(manifest: Manifest) {
-        val resourcePath = BackwardCompatibilities.sourceSets(project)
+        val resourcePath = sourceSets(project)
             .getByName(MAIN_SOURCE_SET_NAME)
             .output.resourcesDir?.toPath() // Law of Demeter? xD
         if (resourcePath != null) {
@@ -69,7 +71,7 @@ open class ManifestTask : DefaultTask() {
     }
 
     private fun generateManifestToResources(manifest: Manifest) {
-        val resourcePath = BackwardCompatibilities.sourceSets(project)
+        val resourcePath = sourceSets(project)
             .getByName(MAIN_SOURCE_SET_NAME)
             .resources.srcDirs
             .firstOrNull()
@@ -80,6 +82,11 @@ open class ManifestTask : DefaultTask() {
 
     private fun writeManifest(manifest: Manifest, resourcePath: Path) {
         manifest.writeTo(resourcePath.resolve(MANIFEST_PATH))
+    }
+
+    fun sourceSets(project: Project): SourceSetContainer {
+        return project.extensions.getByType(org.gradle.api.plugins.JavaPluginExtension::class.java)
+            .sourceSets
     }
 
     companion object {

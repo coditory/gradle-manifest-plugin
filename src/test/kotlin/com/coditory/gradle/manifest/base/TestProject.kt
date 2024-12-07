@@ -1,5 +1,8 @@
 package com.coditory.gradle.manifest.base
 
+import com.coditory.gradle.manifest.ManifestPlugin
+import com.coditory.gradle.manifest.ManifestPluginExtension
+import com.coditory.gradle.manifest.ManifestTask
 import org.gradle.api.Project
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
@@ -22,6 +25,23 @@ class TestProject(private val project: Project) : Project by project {
 
     fun runGradleAndFail(arguments: List<String>, gradleVersion: String? = null): BuildResult {
         return gradleRunner(this, arguments, gradleVersion).buildAndFail()
+    }
+
+    fun readFile(path: String): String {
+        return projectDir.resolve(path)
+            .readText()
+    }
+
+    fun getManifestTask(): ManifestTask {
+        return this.tasks
+            .named(ManifestPlugin.GENERATE_MANIFEST_TASK, ManifestTask::class.java)
+            .get()
+    }
+
+    fun generateManifest(configure: (ManifestPluginExtension) -> Unit = {}): String {
+        this.extensions.configure(ManifestPluginExtension::class.java, configure)
+        getManifestTask().generateManifest()
+        return this.readFile("build/resources/main/META-INF/MANIFEST.MF")
     }
 
     // Used by @AutoClose test annotation

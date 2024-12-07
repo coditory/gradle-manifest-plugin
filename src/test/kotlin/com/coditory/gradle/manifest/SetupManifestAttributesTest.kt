@@ -205,9 +205,7 @@ class SetupManifestAttributesTest {
             .build()
 
         // when
-        extractManifestAttributes(project).let {
-            it.put("Built-Host", "host-1024")
-        }
+        extractManifestAttributes(project).put("Built-Host", "host-1024")
 
         // then
         val manifest = extractManifestMap(project)

@@ -2,11 +2,12 @@ package com.coditory.gradle.integration
 
 import com.coditory.gradle.manifest.base.GradleTestVersions.GRADLE_MAX_SUPPORTED_VERSION
 import com.coditory.gradle.manifest.base.GradleTestVersions.GRADLE_MIN_SUPPORTED_VERSION
+import com.coditory.gradle.manifest.base.TestProject
 import com.coditory.gradle.manifest.base.TestProjectBuilder
-import com.coditory.gradle.manifest.base.readFile
-import com.coditory.gradle.manifest.base.runGradle
+import com.coditory.gradle.manifest.base.Versions
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.testkit.runner.TaskOutcome
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
@@ -37,13 +38,14 @@ class GenerateClasspathTest {
                 }
 
                 dependencies {
-                    implementation("com.github.slugify:slugify:2.4")
-                    runtimeOnly("org.hashids:hashids:1.0.3")
-                    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
+                    implementation("com.github.slugify:slugify:${Versions.slugify}")
+                    runtimeOnly("org.hashids:hashids:${Versions.hashids}")
+                    testImplementation("org.junit.jupiter:junit-jupiter-api:${Versions.junit}")
                 }
             """,
             )
             .build()
+        deferCleanUp(project)
 
         // when
         val result = project.runGradle(listOf("processResources"), gradleVersion)
@@ -55,11 +57,8 @@ class GenerateClasspathTest {
         // and
         val manifest = project.readFile("build/resources/main/META-INF/MANIFEST.MF")
         assertThat(manifest.replace("\r\n ", ""))
-            .contains("Class-Path: my/jars/slugify-2.4.jar my/jars/hashids-1.0.3.jar my/jars/icu4j-64.2.jar\r\n")
+            .contains("Class-Path: my/jars/slugify-${Versions.slugify}.jar my/jars/hashids-${Versions.hashids}.jar my/jars/icu4j-64.2.jar\r\n")
             .matches(".*Class-Path: [^:]+(Built-JDK: [^:]+)?$".toPattern(DOTALL))
-
-        // cleanup
-        project.close()
     }
 
     @Test
@@ -85,11 +84,12 @@ class GenerateClasspathTest {
                 }
 
                 dependencies {
-                    implementation("com.github.slugify:slugify:2.4")
+                    implementation("com.github.slugify:slugify:${Versions.slugify}")
                 }
             """,
             )
             .build()
+        deferCleanUp(project)
 
         // when
         val result = project.runGradle(listOf("processResources"))
@@ -101,9 +101,21 @@ class GenerateClasspathTest {
         // and
         val manifest = project.readFile("build/resources/main/META-INF/MANIFEST.MF")
         assertThat(manifest.replace("\r\n ", ""))
-            .contains("my/important/jars/slugify-2.4.jar")
+            .contains("my/important/jars/slugify-${Versions.slugify}.jar")
+    }
 
-        // cleanup
-        project.close()
+    companion object {
+        private val projects: MutableList<TestProject> = mutableListOf()
+
+        @Synchronized
+        fun deferCleanUp(project: TestProject) {
+            projects.add(project)
+        }
+
+        @AfterAll
+        @JvmStatic
+        fun cleanUp() {
+            projects.forEach { it.close() }
+        }
     }
 }

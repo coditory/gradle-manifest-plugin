@@ -1,9 +1,8 @@
 package com.coditory.gradle.manifest
 
+import com.coditory.gradle.manifest.base.TestProject
 import com.coditory.gradle.manifest.base.TestProjectBuilder
-import com.coditory.gradle.manifest.base.generateManifest
 import org.assertj.core.api.Assertions.assertThat
-import org.gradle.api.Project
 import org.junit.jupiter.api.Test
 
 class GenerateManifestWithoutDisabledAttributesTest {
@@ -40,7 +39,7 @@ class GenerateManifestWithoutDisabledAttributesTest {
             .contains("SCM-")
     }
 
-    private fun project(): Project {
+    private fun project(): TestProject {
         return TestProjectBuilder.projectWithPlugins()
             .withGroup("com.coditory")
             .withGitRepository()
