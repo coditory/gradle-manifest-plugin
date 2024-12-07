@@ -58,7 +58,7 @@ class TestRepository private constructor(
 
     companion object {
         const val REMOTE_NAME = "origin"
-        const val REMOTE_URL = "git@github.com:pmendelski/gradle-manifest-plugin.git"
+        const val REMOTE_URL = "git@github.com:coditory/gradle-manifest-plugin.git"
         const val COMMIT_MESSAGE = "Very important commit"
         const val AUTHOR_NAME = "John Doe"
         const val AUTHOR_EMAIL = "john.doe@acme.com"
@@ -67,6 +67,7 @@ class TestRepository private constructor(
         fun repository(project: Project): TestRepository {
             val git = Git.init()
                 .setDirectory(project.rootDir)
+                .setInitialBranch("main")
                 .call()
             return TestRepository(project, git)
         }

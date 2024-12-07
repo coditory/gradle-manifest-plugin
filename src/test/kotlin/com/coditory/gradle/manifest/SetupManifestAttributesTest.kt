@@ -175,7 +175,7 @@ class SetupManifestAttributesTest {
                 "SCM-Commit-Author" to "John Doe <john.doe@acme.com>",
                 "SCM-Commit-Date" to "2020-03-24T19:46:03Z",
                 "SCM-Commit-Hash" to repo.getLastCommit().name(),
-                "SCM-Repository" to "git@github.com:pmendelski/gradle-manifest-plugin.git",
+                "SCM-Repository" to "git@github.com:coditory/gradle-manifest-plugin.git",
             ),
         )
     }
