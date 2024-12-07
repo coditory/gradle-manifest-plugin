@@ -44,7 +44,7 @@ class GenerateManifestWithoutDisabledAttributesTest {
         return TestProjectBuilder.projectWithPlugins()
             .withGroup("com.coditory")
             .withGitRepository()
-            .withExtProperty("mainClassName", "com.coditory.MainClass")
+            .withMainClass("com.coditory.MainClass")
             .build()
     }
 }

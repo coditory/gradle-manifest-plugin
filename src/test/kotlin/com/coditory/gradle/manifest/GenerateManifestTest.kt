@@ -99,6 +99,6 @@ class GenerateManifestTest {
         return projectWithPlugins("sample-project")
             .withGroup("com.coditory")
             .withGitRepository()
-            .withExtProperty("mainClassName", "com.coditory.MainClass")
+            .withMainClass("com.coditory.MainClass")
     }
 }

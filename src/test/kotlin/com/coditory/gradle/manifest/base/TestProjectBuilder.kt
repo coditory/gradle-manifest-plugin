@@ -2,7 +2,9 @@ package com.coditory.gradle.manifest.base
 
 import com.coditory.gradle.manifest.base.TestRepository.Companion.repository
 import org.gradle.api.Plugin
-import org.gradle.api.Project
+import org.gradle.api.internal.project.DefaultProject
+import org.gradle.api.plugins.ApplicationPlugin
+import org.gradle.api.plugins.JavaApplication
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.testfixtures.ProjectBuilder
 import java.io.File
@@ -15,7 +17,7 @@ class TestProjectBuilder private constructor(projectDir: File, name: String) {
     private val project = ProjectBuilder.builder()
         .withProjectDir(projectDir)
         .withName(name)
-        .build()
+        .build() as DefaultProject
 
     fun withGroup(group: String): TestProjectBuilder {
         project.group = group
@@ -24,11 +26,6 @@ class TestProjectBuilder private constructor(projectDir: File, name: String) {
 
     fun withVersion(version: String): TestProjectBuilder {
         project.version = version
-        return this
-    }
-
-    fun withExtProperty(name: String, value: String): TestProjectBuilder {
-        project.extensions.extraProperties[name] = value
         return this
     }
 
@@ -47,8 +44,19 @@ class TestProjectBuilder private constructor(projectDir: File, name: String) {
         return this
     }
 
+    fun withMainClass(mainClass: String): TestProjectBuilder {
+        project.extensions.getByType(JavaApplication::class.java).mainClass.set(mainClass)
+        return this
+    }
+
     fun withIdeaProjectFiles(): TestProjectBuilder {
         project.rootDir.resolve(".idea").createNewFile()
+        return this
+    }
+
+    fun withBuildGradleKts(content: String): TestProjectBuilder {
+        val buildFile = project.rootDir.resolve("build.gradle.kts")
+        buildFile.writeText(content.trimIndent().trim())
         return this
     }
 
@@ -66,42 +74,31 @@ class TestProjectBuilder private constructor(projectDir: File, name: String) {
         return this
     }
 
-    fun build(): Project {
-        return project
+    fun build(): TestProject {
+        project.evaluate()
+        return TestProject(project)
     }
 
     companion object {
-        private var projectDirs = mutableListOf<File>()
-
-        fun project(name: String = "sample-project", projectDir: File): TestProjectBuilder {
-            projectDir.mkdir()
-            projectDirs.add(projectDir)
-            return TestProjectBuilder(projectDir, name)
+        fun createProject(): TestProject {
+            return projectWithPlugins().build()
         }
 
-        fun project(name: String = "sample-project"): TestProjectBuilder {
-            return TestProjectBuilder(createProjectDir(name), name)
+        fun project(name: String = "sample-project", dir: File = createProjectDir(name)): TestProjectBuilder {
+            return TestProjectBuilder(dir, name)
         }
 
         fun projectWithPlugins(name: String = "sample-project"): TestProjectBuilder {
             return project(name)
-                .withPlugins(JavaPlugin::class, ManifestPluginWithStubs::class)
+                .withPlugins(JavaPlugin::class, ManifestPluginWithStubs::class, ApplicationPlugin::class)
         }
 
         @Suppress("EXPERIMENTAL_API_USAGE_ERROR")
         private fun createProjectDir(directory: String): File {
-            removeProjectDirs()
             val projectParentDir = createTempDirectory().toFile()
             val projectDir = projectParentDir.resolve(directory)
             projectDir.mkdir()
-            projectDirs.add(projectParentDir)
             return projectDir
-        }
-
-        fun removeProjectDirs() {
-            projectDirs.forEach {
-                it.deleteRecursively()
-            }
         }
     }
 }

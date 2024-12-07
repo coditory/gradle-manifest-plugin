@@ -1,52 +1,63 @@
-package com.coditory.gradle.manifest.acceptance
+package com.coditory.gradle.integration
 
+import com.coditory.gradle.manifest.base.GradleTestVersions.GRADLE_MAX_SUPPORTED_VERSION
+import com.coditory.gradle.manifest.base.GradleTestVersions.GRADLE_MIN_SUPPORTED_VERSION
 import com.coditory.gradle.manifest.base.TestProjectBuilder
 import com.coditory.gradle.manifest.base.TestRepository.Companion.COMMIT_MESSAGE
 import com.coditory.gradle.manifest.base.readFile
-import com.coditory.gradle.manifest.base.runGradle
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.AutoClose
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
 class CommandLineAcceptanceTest {
-    private val project = TestProjectBuilder.project("sample-project")
-        .withBuildGradle(
-            """
-            plugins {
-                id 'java'
-                id 'application'
-                id 'com.coditory.manifest'
-            }
-
-            group = 'com.coditory'
-            version = '0.0.1-SNAPSHOT'
-
-            repositories {
-                jcenter()
-            }
-
-            application {
-                mainClassName = 'com.coditory.Application'
-            }
-            """.trimIndent(),
-        )
-        .withFile(
-            "src/main/java/com/coditory/Application.java",
-            """
-            package com.coditory;
-
-            public class Application {
-                public static void main(String[] args) {
-                    System.out.println(">>> Application.main");
+    companion object {
+        @AutoClose
+        private val project = TestProjectBuilder
+            .project("project-" + CommandLineAcceptanceTest::class.simpleName)
+            .withBuildGradleKts(
+                """
+                plugins {
+                    id("java")
+                    id("application")
+                    id("com.coditory.manifest")
                 }
-            }
-            """.trimIndent(),
-        )
-        .withGitRepository()
-        .build()
+    
+                group = "com.coditory"
+                version = "0.0.1-SNAPSHOT"
+    
+                repositories {
+                    mavenCentral()
+                }
+    
+                application {
+                    mainClass.set("com.coditory.Application")
+                }
+                """.trimIndent(),
+            )
+            .withFile(
+                "src/main/java/com/coditory/Application.java",
+                """
+                package com.coditory;
+    
+                public class Application {
+                    public static void main(String[] args) {
+                        System.out.println(">>> Application.main");
+                    }
+                }
+                """.trimIndent(),
+            )
+            .withGitRepository()
+            .build()
+    }
+
+    @AfterEach
+    fun cleanProject() {
+        project.clean()
+    }
 
     private val expectedManifestKeys = listOf(
         "Manifest-Version:",
@@ -67,13 +78,8 @@ class CommandLineAcceptanceTest {
         "SCM-Commit-Date:",
     )
 
-    @AfterEach
-    fun removeProjectDir() {
-        TestProjectBuilder.removeProjectDirs()
-    }
-
     @ParameterizedTest(name = "should generate manifest on processResources command for gradle {0}")
-    @ValueSource(strings = ["current", "7.6.4"])
+    @ValueSource(strings = [GRADLE_MAX_SUPPORTED_VERSION, GRADLE_MIN_SUPPORTED_VERSION])
     fun `should generate manifest on processResources command`(gradleVersion: String?) {
         // when
         val result = project.runGradle(listOf("processResources"), gradleVersion)
@@ -83,7 +89,7 @@ class CommandLineAcceptanceTest {
         // and
         assertThat(project.readFile("build/resources/main/META-INF/MANIFEST.MF"))
             .contains(expectedManifestKeys)
-            .contains("Implementation-Title: sample-project")
+            .contains("Implementation-Title: ${project.name}")
             .contains("Implementation-Group: com.coditory")
             .contains("Implementation-Version: 0.0.1-SNAPSHOT")
             .contains("SCM-Commit-Message: $COMMIT_MESSAGE")

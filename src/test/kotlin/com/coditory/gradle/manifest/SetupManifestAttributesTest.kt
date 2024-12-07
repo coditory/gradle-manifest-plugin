@@ -7,6 +7,7 @@ import com.coditory.gradle.manifest.base.SystemProperties.withoutSystemPropertie
 import com.coditory.gradle.manifest.base.TestProjectBuilder.Companion.projectWithPlugins
 import com.coditory.gradle.manifest.base.TestRepository.Companion.repository
 import org.assertj.core.api.Assertions.assertThat
+import org.gradle.api.plugins.JavaApplication
 import org.junit.jupiter.api.Test
 
 class SetupManifestAttributesTest {
@@ -60,7 +61,7 @@ class SetupManifestAttributesTest {
         val project = projectWithPlugins("sample-project")
             .withGroup("com.coditory")
             .withVersion("0.0.1-SNAPSHOT")
-            .withExtProperty("mainClassName", "com.coditory.MainClass")
+            .withMainClass("com.coditory.MainClass")
             .build()
         val properties = mapOf(
             "user.name" to "john.doe",
@@ -99,7 +100,7 @@ class SetupManifestAttributesTest {
         val project = projectWithPlugins("sample-project")
             .withGroup("")
             .withVersion("")
-            .withExtProperty("mainClassName", "")
+            .withMainClass("")
             .build()
         val properties = mapOf(
             "user.name" to "",
@@ -220,13 +221,13 @@ class SetupManifestAttributesTest {
         val project = projectWithPlugins("sample-project")
             .withGroup("com.coditory")
             .withVersion("0.0.1-SNAPSHOT")
-            .withExtProperty("mainClassName", "com.coditory.MainClass")
+            .withMainClass("com.coditory.MainClass")
             .build()
 
         // when
         project.version = "1.0.0-new-version"
         project.group = "new.group.name"
-        project.extensions.extraProperties["mainClassName"] = "com.acme.NewClassName"
+        project.extensions.getByType(JavaApplication::class.java).mainClass.set("com.acme.NewClassName")
 
         // then
         val manifest = extractManifestMap(project)

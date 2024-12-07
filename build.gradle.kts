@@ -13,7 +13,7 @@ repositories {
 }
 
 dependencies {
-    implementation(gradleApi())
+    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0")
     implementation("org.eclipse.jgit:org.eclipse.jgit:7.1.0.202411261347-r")
 
     testImplementation("org.assertj:assertj-core:3.26.3")
@@ -36,12 +36,20 @@ java {
     }
 }
 
+ktlint {
+    version = "1.4.0"
+}
+
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
     testLogging {
         events("passed", "failed", "skipped")
         setExceptionFormat("full")
     }
+}
+
+tasks.register("coverage") {
+    dependsOn("koverXmlReport", "koverHtmlReport", "koverLog")
 }
 
 // Marking new version (incrementPatch [default], incrementMinor, incrementMajor)

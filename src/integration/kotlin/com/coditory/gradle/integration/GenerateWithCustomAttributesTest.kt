@@ -1,54 +1,49 @@
-package com.coditory.gradle.manifest.acceptance
+package com.coditory.gradle.integration
 
+import com.coditory.gradle.manifest.base.GradleTestVersions.GRADLE_MAX_SUPPORTED_VERSION
+import com.coditory.gradle.manifest.base.GradleTestVersions.GRADLE_MIN_SUPPORTED_VERSION
 import com.coditory.gradle.manifest.base.TestProjectBuilder
-import com.coditory.gradle.manifest.base.TestProjectBuilder.Companion.projectWithPlugins
 import com.coditory.gradle.manifest.base.readFile
 import com.coditory.gradle.manifest.base.runGradle
 import org.assertj.core.api.Assertions.assertThat
 import org.gradle.testkit.runner.TaskOutcome
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
 class GenerateWithCustomAttributesTest {
-    @AfterEach
-    fun removeProjectDir() {
-        TestProjectBuilder.removeProjectDirs()
-    }
-
     @ParameterizedTest(name = "should generate manifest with custom attributes for gradle {0}")
-    @ValueSource(strings = ["current", "7.6.4"])
+    @ValueSource(strings = [GRADLE_MAX_SUPPORTED_VERSION, GRADLE_MIN_SUPPORTED_VERSION])
     fun `should generate manifest with custom attributes`(gradleVersion: String?) {
         // given
-        val project = projectWithPlugins()
-            .withGroup("com.coditory")
-            .withBuildGradle(
+        val project = TestProjectBuilder
+            .project("project-" + GenerateWithCustomAttributesTest::class.simpleName)
+            .withBuildGradleKts(
                 """
                 plugins {
-                    id 'java'
-                    id 'com.coditory.manifest'
+                    id("java")
+                    id("com.coditory.manifest")
                 }
 
                 repositories {
-                    jcenter()
+                    mavenCentral()
                 }
-
-                group = 'com.coditory'
-                version = '0.0.1-SNAPSHOT'
+                
+                group = "com.coditory"
+                version = "0.0.1-SNAPSHOT"
 
                 manifest {
                     buildAttributes = false
                     implementationAttributes = true
                     scmAttributes = false
-                    attributes = [
-                        "Custom-1": "Custom-Value",
-                        "Custom-2": 123
-                    ]
+                    attributes = mapOf<String, Any>(
+                        "Custom-1" to "Custom-Value",
+                        "Custom-2" to 123,
+                    )
                 }
 
                 dependencies {
-                    compileOnly 'org.springframework.boot:spring-boot-starter:2.4.2'
-                    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+                    compileOnly("org.springframework.boot:spring-boot-starter:2.4.2")
+                    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
                 }
             """,
             )
@@ -63,7 +58,7 @@ class GenerateWithCustomAttributesTest {
 
         // and
         assertThat(project.readFile("build/resources/main/META-INF/MANIFEST.MF"))
-            .contains("Implementation-Title: sample-project")
+            .contains("Implementation-Title: ${project.name}")
             .contains("Implementation-Group: com.coditory")
             .contains("Implementation-Version: 0.0.1-SNAPSHOT")
             .contains("Custom-1: Custom-Value")

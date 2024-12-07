@@ -5,6 +5,7 @@ import org.eclipse.jgit.lib.Constants.HEAD
 import org.gradle.api.Project
 import org.gradle.api.java.archives.Attributes
 import org.gradle.api.logging.LogLevel.INFO
+import org.gradle.api.plugins.JavaApplication
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME
 import org.gradle.jvm.tasks.Jar
@@ -27,9 +28,7 @@ internal object ManifestAttributes {
         attributes: Attributes,
         extension: ManifestPluginExtension,
     ) {
-        val generated = mapOf(
-            "Main-Class" to orEmpty { project.properties["mainClassName"] },
-        )
+        val generated = mainClassAttribute(project)
             .plus(implementationAttributes(project, extension))
             .plus(buildAttributes(clock, hostNameResolver, extension))
             .plus(scmAttributes(project, extension))
@@ -70,6 +69,13 @@ internal object ManifestAttributes {
             .joinToString(" ")
     }
 
+    private fun mainClassAttribute(project: Project): Map<String, Any?> {
+        val javaApplication = project.extensions.findByType(JavaApplication::class.java)
+        return mapOf(
+            "Main-Class" to orEmpty { javaApplication?.mainClass?.orNull },
+        )
+    }
+
     private fun implementationAttributes(
         project: Project,
         extension: ManifestPluginExtension,
@@ -77,7 +83,9 @@ internal object ManifestAttributes {
         if (!extension.implementationAttributes) {
             return mapOf()
         }
+        val javaApplication = project.extensions.findByType(JavaApplication::class.java)
         return mapOf(
+            "Main-Class" to orEmpty { javaApplication?.mainClass?.getOrElse("") ?: "" },
             "Implementation-Title" to lazy { implementationTitle(project) },
             "Implementation-Group" to lazy { project.group },
             "Implementation-Version" to lazy { project.version },
@@ -137,7 +145,7 @@ internal object ManifestAttributes {
     private fun orEmpty(provider: () -> Any?): String {
         return try {
             provider()?.toString() ?: ""
-        } catch (e: Throwable) {
+        } catch (_: Throwable) {
             ""
         }
     }
