@@ -1,9 +1,9 @@
 package com.coditory.gradle.manifest
 
-import com.coditory.gradle.manifest.HostNameResolver.Companion.INET_HOST_NAME_RESOLVER
+import com.coditory.gradle.manifest.attributes.HostNameResolver.Companion.INET_HOST_NAME_RESOLVER
 import java.time.Clock
 
-open class ManifestPlugin : ParameterizedManifestPlugin(
+open class ManifestPlugin : ManifestParameterizedPlugin(
     clock = Clock.systemUTC(),
     hostNameResolver = INET_HOST_NAME_RESOLVER,
 ) {

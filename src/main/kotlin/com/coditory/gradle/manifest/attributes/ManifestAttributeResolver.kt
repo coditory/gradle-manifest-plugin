@@ -1,12 +1,10 @@
-package com.coditory.gradle.manifest
+package com.coditory.gradle.manifest.attributes
 
-import org.eclipse.jgit.api.Git
-import org.eclipse.jgit.lib.Constants.HEAD
+import com.coditory.gradle.manifest.ManifestPluginExtension
 import org.gradle.api.Project
-import org.gradle.api.java.archives.Attributes
-import org.gradle.api.logging.LogLevel.INFO
+import org.gradle.api.plugins.BasePluginExtension
 import org.gradle.api.plugins.JavaApplication
-import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.plugins.JavaPlugin.JAR_TASK_NAME
 import org.gradle.api.plugins.JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME
 import org.gradle.jvm.tasks.Jar
 import java.nio.file.Paths
@@ -14,30 +12,32 @@ import java.time.Clock
 import java.time.Instant
 import java.time.temporal.ChronoUnit.SECONDS
 
-internal object ManifestAttributes {
-    fun fillAttributes(clock: Clock, hostNameResolver: HostNameResolver, project: Project, extension: ManifestPluginExtension) {
-        project.tasks.named(JavaPlugin.JAR_TASK_NAME, Jar::class.java) {
-            fillAttributes(clock, hostNameResolver, project, it.manifest.attributes, extension)
+internal object ManifestAttributeResolver {
+    fun fillManifestAttributes(clock: Clock, hostNameResolver: HostNameResolver, project: Project) {
+        project.tasks.named(JAR_TASK_NAME, Jar::class.java) {
+            val attributes = project.tasks
+                .named(JAR_TASK_NAME, Jar::class.java).get()
+                .manifest.attributes
+            val generated = resolveAttributes(clock, hostNameResolver, project)
+                .filter { !attributes.containsKey(it.first) }
+            attributes.putAll(generated)
         }
     }
 
-    private fun fillAttributes(
+    private fun resolveAttributes(
         clock: Clock,
         hostNameResolver: HostNameResolver,
         project: Project,
-        attributes: Attributes,
-        extension: ManifestPluginExtension,
-    ) {
-        val generated = mainClassAttribute(project)
+    ): List<Pair<String, String?>> {
+        val extension = project.extensions.getByType(ManifestPluginExtension::class.java)
+        return mainClassAttribute(project)
             .plus(implementationAttributes(project, extension))
             .plus(buildAttributes(clock, hostNameResolver, extension))
             .plus(scmAttributes(project, extension))
             .plus(customAttributes(extension))
             .plus(classpathAttribute(project, extension))
-            .filter { !attributes.containsKey(it.key) }
             .map { it.key to it.value?.toString()?.trim() }
             .filter { !it.second.isNullOrBlank() }
-        attributes.putAll(generated)
     }
 
     private fun customAttributes(extension: ManifestPluginExtension): Map<String, Any?> {
@@ -59,7 +59,7 @@ internal object ManifestAttributes {
     }
 
     private fun implementationTitle(project: Project): String {
-        return project.extensions.getByType(org.gradle.api.plugins.BasePluginExtension::class.java)
+        return project.extensions.getByType(BasePluginExtension::class.java)
             .archivesName.get()
     }
 
@@ -84,9 +84,7 @@ internal object ManifestAttributes {
         if (!extension.implementationAttributes) {
             return mapOf()
         }
-        val javaApplication = project.extensions.findByType(JavaApplication::class.java)
         return mapOf(
-            "Main-Class" to orEmpty { javaApplication?.mainClass?.getOrElse("") ?: "" },
             "Implementation-Title" to lazy { implementationTitle(project) },
             "Implementation-Group" to lazy { project.group },
             "Implementation-Version" to lazy { project.version },
@@ -114,21 +112,25 @@ internal object ManifestAttributes {
         if (!extension.scmAttributes) {
             return mapOf()
         }
-        return try {
-            val repository = Git.open(project.rootProject.projectDir).repository
-            val head = repository.parseCommit(repository.resolve(HEAD))
-            return mapOf(
-                "SCM-Repository" to orEmpty { repository.config.getString("remote", "origin", "url") },
-                "SCM-Branch" to orEmpty { repository.fullBranch },
-                "SCM-Commit-Message" to orEmpty { head.shortMessage },
-                "SCM-Commit-Hash" to orEmpty { head.name() },
-                "SCM-Commit-Author" to orEmpty { "${head.authorIdent.name.trim()} <${head.authorIdent.emailAddress.trim()}>" },
-                "SCM-Commit-Date" to orEmpty { format(head.authorIdent.whenAsInstant) },
-            )
-        } catch (e: Throwable) {
-            project.logger.log(INFO, "Could not resolve manifest SCM attributes. Using fallback.", e)
-            mapOf()
-        }
+        val repository = project.providers.of(RepositoryValueSource::class.java) { config ->
+            config.parameters { it.projectDir.set(project.rootProject.projectDir) }
+        }.get()
+        return mapOf(
+            "SCM-Repository" to orEmpty { repository.url },
+            "SCM-Branch" to orEmpty { repository.branch },
+            "SCM-Commit-Message" to orEmpty { repository.commitMessage },
+            "SCM-Commit-Hash" to orEmpty { repository.commitHash },
+            "SCM-Commit-Author" to orEmpty {
+                repository.commitAuthorName?.let {
+                    if (repository.commitAuthorEmail != null) {
+                        "${repository.commitAuthorName} <${repository.commitAuthorEmail}>"
+                    } else {
+                        repository.commitAuthorName
+                    }
+                }
+            },
+            "SCM-Commit-Date" to orEmpty { repository.commitEpochSeconds?.let { format(Instant.ofEpochSecond(it)) } },
+        )
     }
 
     private fun format(instant: Instant): String {

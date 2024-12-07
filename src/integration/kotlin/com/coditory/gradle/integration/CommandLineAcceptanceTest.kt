@@ -130,4 +130,16 @@ class CommandLineAcceptanceTest {
         assertThat(project.readFile("build/resources/main/META-INF/MANIFEST.MF"))
             .isNotEmpty()
     }
+
+    @Test
+    fun `should work with configuration cache`() {
+        // when
+        val result = project.runGradle(listOf("manifest", "--configuration-cache"))
+        // then
+        assertThat(result.task(":manifest")?.outcome)
+            .isEqualTo(TaskOutcome.SUCCESS)
+        // and
+        assertThat(project.readFile("build/resources/main/META-INF/MANIFEST.MF"))
+            .isNotEmpty()
+    }
 }

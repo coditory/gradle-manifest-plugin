@@ -1,9 +1,9 @@
 package com.coditory.gradle.manifest.base
 
-import com.coditory.gradle.manifest.HostNameResolver
-import com.coditory.gradle.manifest.ParameterizedManifestPlugin
+import com.coditory.gradle.manifest.ManifestParameterizedPlugin
+import com.coditory.gradle.manifest.attributes.HostNameResolver
 
-class ManifestPluginWithStubs : ParameterizedManifestPlugin(clock, hostNameProvider) {
+class ManifestPluginWithStubs : ManifestParameterizedPlugin(clock, hostNameProvider) {
     companion object {
         val clock: UpdatableFixedClock = UpdatableFixedClock()
         val hostNameProvider = object : HostNameResolver {

@@ -1,4 +1,4 @@
-package com.coditory.gradle.manifest
+package com.coditory.gradle.manifest.attributes
 
 import java.net.InetAddress
 
