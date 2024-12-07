@@ -18,7 +18,7 @@ Add to your `build.gradle.kts`:
 
 ```gradle
 plugins {
-  id("com.coditory.manifest") version "1.0.0"
+  id("com.coditory.manifest") version "1.1.0"
 }
 ```
 
