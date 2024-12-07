@@ -14,11 +14,11 @@ to [jar manifest file](https://docs.oracle.com/javase/tutorial/deployment/jar/ma
 
 ## Installing the plugin
 
-Add to your `build.gradle`:
+Add to your `build.gradle.kts`:
 
 ```gradle
 plugins {
-  id 'com.coditory.manifest' version '0.2.6'
+  id("com.coditory.manifest") version "1.0.0"
 }
 ```
 
