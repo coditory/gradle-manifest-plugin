@@ -17,7 +17,7 @@ class GenerateWithCustomAttributesTest {
     }
 
     @ParameterizedTest(name = "should generate manifest with custom attributes for gradle {0}")
-    @ValueSource(strings = ["current", "6.0"])
+    @ValueSource(strings = ["current", "7.6.4"])
     fun `should generate manifest with custom attributes`(gradleVersion: String?) {
         // given
         val project = projectWithPlugins()
@@ -50,7 +50,7 @@ class GenerateWithCustomAttributesTest {
                     compileOnly 'org.springframework.boot:spring-boot-starter:2.4.2'
                     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
                 }
-            """
+            """,
             )
             .build()
 

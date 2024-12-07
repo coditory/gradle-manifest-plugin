@@ -28,8 +28,8 @@ class SetupManifestAttributesTest {
                 "Built-Host" to "localhost",
                 "Implementation-Title" to "sample-project",
                 "Implementation-Version" to "unspecified",
-                "Manifest-Version" to "1.0"
-            )
+                "Manifest-Version" to "1.0",
+            ),
         )
     }
 
@@ -41,7 +41,7 @@ class SetupManifestAttributesTest {
         val properties = mapOf(
             "user.name" to "  john.doe  ",
             "java.version" to "\n11.0.6\t\n",
-            "java.vendor" to " \n\t  AdoptOpenJDK\n\t  "
+            "java.vendor" to " \n\t  AdoptOpenJDK\n\t  ",
         )
 
         // when
@@ -68,7 +68,7 @@ class SetupManifestAttributesTest {
             "java.vendor" to "AdoptOpenJDK",
             "os.arch" to "amd64",
             "os.name" to "Linux",
-            "os.version" to "4.15.0-91-generic"
+            "os.version" to "4.15.0-91-generic",
         )
 
         // when
@@ -88,8 +88,8 @@ class SetupManifestAttributesTest {
                 "Implementation-Title" to "sample-project",
                 "Implementation-Version" to "0.0.1-SNAPSHOT",
                 "Main-Class" to "com.coditory.MainClass",
-                "Manifest-Version" to "1.0"
-            )
+                "Manifest-Version" to "1.0",
+            ),
         )
     }
 
@@ -107,7 +107,7 @@ class SetupManifestAttributesTest {
             "java.vendor" to "",
             "os.arch" to "",
             "os.name" to "",
-            "os.version" to ""
+            "os.version" to "",
         )
 
         // when
@@ -121,8 +121,8 @@ class SetupManifestAttributesTest {
                 "Built-Date" to "2015-12-03T10:15:30Z",
                 "Built-Host" to "localhost",
                 "Implementation-Title" to "sample-project",
-                "Manifest-Version" to "1.0"
-            )
+                "Manifest-Version" to "1.0",
+            ),
         )
     }
 
@@ -136,7 +136,7 @@ class SetupManifestAttributesTest {
             "java.vendor" to "",
             "os.arch" to "",
             "os.name" to "Linux",
-            "os.version" to ""
+            "os.version" to "",
         )
 
         // when
@@ -169,13 +169,13 @@ class SetupManifestAttributesTest {
         // then
         assertThat(scmManifest).isEqualTo(
             mapOf(
-                "SCM-Branch" to "refs/heads/master",
+                "SCM-Branch" to "refs/heads/main",
                 "SCM-Commit-Message" to "Very important commit",
                 "SCM-Commit-Author" to "John Doe <john.doe@acme.com>",
                 "SCM-Commit-Date" to "2020-03-24T19:46:03Z",
-                "SCM-Commit-Hash" to repo.getLastCommit().name(), // long hash
-                "SCM-Repository" to "git@github.com:pmendelski/gradle-manifest-plugin.git"
-            )
+                "SCM-Commit-Hash" to repo.getLastCommit().name(),
+                "SCM-Repository" to "git@github.com:pmendelski/gradle-manifest-plugin.git",
+            ),
         )
     }
 

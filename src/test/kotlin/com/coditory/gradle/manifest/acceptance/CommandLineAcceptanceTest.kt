@@ -31,7 +31,7 @@ class CommandLineAcceptanceTest {
             application {
                 mainClassName = 'com.coditory.Application'
             }
-            """.trimIndent()
+            """.trimIndent(),
         )
         .withFile(
             "src/main/java/com/coditory/Application.java",
@@ -43,7 +43,7 @@ class CommandLineAcceptanceTest {
                     System.out.println(">>> Application.main");
                 }
             }
-            """.trimIndent()
+            """.trimIndent(),
         )
         .withGitRepository()
         .build()
@@ -64,7 +64,7 @@ class CommandLineAcceptanceTest {
         "SCM-Commit-Message:",
         "SCM-Commit-Hash:",
         "SCM-Commit-Author:",
-        "SCM-Commit-Date:"
+        "SCM-Commit-Date:",
     )
 
     @AfterEach
@@ -73,7 +73,7 @@ class CommandLineAcceptanceTest {
     }
 
     @ParameterizedTest(name = "should generate manifest on processResources command for gradle {0}")
-    @ValueSource(strings = ["current", "6.0"])
+    @ValueSource(strings = ["current", "7.6.4"])
     fun `should generate manifest on processResources command`(gradleVersion: String?) {
         // when
         val result = project.runGradle(listOf("processResources"), gradleVersion)

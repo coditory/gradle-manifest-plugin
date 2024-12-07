@@ -9,7 +9,7 @@ import java.time.ZoneId
 
 class UpdatableFixedClock(
     private var fixedTime: Instant = DEFAULT_FIXED_TIME,
-    private var zoneId: ZoneId = DEFAULT_ZONE_ID
+    private var zoneId: ZoneId = DEFAULT_ZONE_ID,
 ) : Clock() {
 
     override fun getZone(): ZoneId {

@@ -1,35 +1,17 @@
 name: Build
 
-on: [pull_request, push, workflow_dispatch]
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches-ignore:
+      - 'gh-pages'
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[ci skip]')"
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Skip duplicates and docs
-        id: skip
-        uses: fkirc/skip-duplicate-actions@v5
-        with:
-          paths_ignore: '["**/README.md", "LICENSE", ".gitignore", ".editorconfig", ".idea/**"]'
-
-      - name: Validate gradle wrapper
-        if: steps.skip.outputs.should_skip != 'true'
-        uses: gradle/wrapper-validation-action@v1
-
-      - name: Setup JDK
-        if: steps.skip.outputs.should_skip != 'true'
-        uses: actions/setup-java@v3
-        with:
-          java-version: 17
-          cache: gradle
-          distribution: temurin
-
-      - name: Build with gradle
-        if: steps.skip.outputs.should_skip != 'true'
-        env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-        run: ./gradlew build
+    uses: coditory/jvm-workflows/.github/workflows/build.yml@v1
+    # Required to pass codecov token
+    secrets: inherit
+    with:
+      java-version: 17
+      build-command: ./gradlew build coverage

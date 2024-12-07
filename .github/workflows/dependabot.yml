@@ -1,0 +1,8 @@
+name: "Dependabot"
+
+on: pull_request_target
+
+jobs:
+  dependabot:
+    uses: coditory/workflows/.github/workflows/dependabot.yml@v1
+    secrets: inherit

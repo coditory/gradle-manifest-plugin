@@ -1,11 +1,48 @@
 version: 2
 updates:
-  - package-ecosystem: "gradle"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "daily"
+    groups:
+      # merged and released instantly
+      sec-updates:
+        applies-to: security-updates
+        patterns:
+          - "*"
+      # merged automatically
+      dev-dependencies:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    groups:
+      # merged and released instantly
+      sec-updates:
+        applies-to: security-updates
+        patterns:
+          - "*"
+      # merged automatically
+      dev-dependencies:
+        patterns:
+          # gradle plugins
+          - "*kotlin-gradle-plugin"
+          - "com.coditory.integration-test"
+          - "com.gradle.plugin-publish"
+          - "org.jlleitschuh.gradle.ktlint"
+          - "org.jetbrains.kotlinx.kover"
+          # test dependencies
+          - "org.assertj*"
+          - "org.junit*"
+      # merged and released automatically
+      prod-dependencies:
+        update-types:
+          - "patch"
+          - "minor"
+      # requires human approval and has higher chance to fail build
+      prod-dependencies-major:
+        update-types:
+          - "major"

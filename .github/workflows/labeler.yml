@@ -1,0 +1,8 @@
+name: "Labeler"
+
+on: pull_request_target
+
+jobs:
+  labeler:
+    uses: coditory/workflows/.github/workflows/labeler.yml@v1
+    secrets: inherit

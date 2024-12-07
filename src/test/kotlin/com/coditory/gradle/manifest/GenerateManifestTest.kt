@@ -25,7 +25,7 @@ class GenerateManifestTest {
         "SCM-Commit-Message:",
         "SCM-Commit-Hash:",
         "SCM-Commit-Author:",
-        "SCM-Commit-Date:"
+        "SCM-Commit-Date:",
     )
 
     @Test

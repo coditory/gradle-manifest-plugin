@@ -87,7 +87,7 @@ internal object ManifestAttributes {
     private fun buildAttributes(
         clock: Clock,
         hostNameResolver: HostNameResolver,
-        extension: ManifestPluginExtension
+        extension: ManifestPluginExtension,
     ): Map<String, String?> {
         if (!extension.buildAttributes) {
             return mapOf()
@@ -114,7 +114,7 @@ internal object ManifestAttributes {
                 "SCM-Commit-Message" to orEmpty { head.shortMessage },
                 "SCM-Commit-Hash" to orEmpty { head.name() },
                 "SCM-Commit-Author" to orEmpty { "${head.authorIdent.name.trim()} <${head.authorIdent.emailAddress.trim()}>" },
-                "SCM-Commit-Date" to orEmpty { format(head.authorIdent.`when`.toInstant()) },
+                "SCM-Commit-Date" to orEmpty { format(head.authorIdent.whenAsInstant) },
             )
         } catch (e: Throwable) {
             project.logger.log(INFO, "Could not resolve manifest SCM attributes. Using fallback.", e)

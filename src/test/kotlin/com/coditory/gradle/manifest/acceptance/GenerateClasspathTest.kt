@@ -19,7 +19,7 @@ class GenerateClasspathTest {
     }
 
     @ParameterizedTest(name = "should generate manifest with classpath for gradle {0}")
-    @ValueSource(strings = ["current", "6.0"])
+    @ValueSource(strings = ["current", "7.6.4"])
     fun `should generate classpath`(gradleVersion: String?) {
         // given
         val project = projectWithPlugins()
@@ -44,7 +44,7 @@ class GenerateClasspathTest {
                     runtimeOnly 'org.hashids:hashids:1.0.3'
                     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
                 }
-            """
+            """,
             )
             .build()
 
@@ -85,7 +85,7 @@ class GenerateClasspathTest {
                 dependencies {
                     implementation 'com.github.slugify:slugify:2.4'
                 }
-            """
+            """,
             )
             .build()
 

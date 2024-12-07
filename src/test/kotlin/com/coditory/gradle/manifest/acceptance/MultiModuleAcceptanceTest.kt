@@ -24,7 +24,7 @@ class MultiModuleAcceptanceTest {
             subprojects {
                 apply plugin: 'com.coditory.manifest'
             }
-            """.trimIndent()
+            """.trimIndent(),
         )
         .withFile(
             "settings.gradle",
@@ -33,7 +33,7 @@ class MultiModuleAcceptanceTest {
 
             include 'project-a'
             include 'project-b'
-            """.trimIndent()
+            """.trimIndent(),
         )
         .withGitRepository()
         .build()
@@ -53,7 +53,7 @@ class MultiModuleAcceptanceTest {
             application {
                 mainClassName = 'com.coditory.ProjectA'
             }
-            """.trimIndent()
+            """.trimIndent(),
         )
         .withFile(
             "src/main/java/com/coditory/ProjectA.java",
@@ -65,7 +65,7 @@ class MultiModuleAcceptanceTest {
                     System.out.println(">>> ProjectA");
                 }
             }
-            """.trimIndent()
+            """.trimIndent(),
         )
         .build()
 
@@ -84,7 +84,7 @@ class MultiModuleAcceptanceTest {
             application {
                 mainClassName = 'com.coditory.ProjectB'
             }
-            """.trimIndent()
+            """.trimIndent(),
         )
         .withFile(
             "src/main/java/com/coditory/ProjectB.java",
@@ -96,7 +96,7 @@ class MultiModuleAcceptanceTest {
                     System.out.println(">>> ProjectB");
                 }
             }
-            """.trimIndent()
+            """.trimIndent(),
         )
         .build()
 
@@ -116,7 +116,7 @@ class MultiModuleAcceptanceTest {
         "SCM-Commit-Message:",
         "SCM-Commit-Hash:",
         "SCM-Commit-Author:",
-        "SCM-Commit-Date:"
+        "SCM-Commit-Date:",
     )
 
     @AfterEach

@@ -14,12 +14,12 @@ import java.util.UUID
 
 class TestRepository private constructor(
     private val project: Project,
-    private val git: Git
+    private val git: Git,
 ) {
 
     fun withRemote(
         name: String = REMOTE_NAME,
-        url: String = REMOTE_URL
+        url: String = REMOTE_URL,
     ): TestRepository {
         val config = git.repository.config
         val remoteConfig = RemoteConfig(config, name)
@@ -33,7 +33,7 @@ class TestRepository private constructor(
         message: String = COMMIT_MESSAGE,
         authorName: String = AUTHOR_NAME,
         authorEmail: String = AUTHOR_EMAIL,
-        authorTime: ZonedDateTime = AUTHOR_TIME
+        authorTime: ZonedDateTime = AUTHOR_TIME,
     ): TestRepository {
         val uuid = UUID.randomUUID().toString()
         val filePath = project.rootDir.resolve("samples/$uuid")

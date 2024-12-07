@@ -10,7 +10,7 @@ internal class SystemOutputCapturer private constructor(
     private val outFile: File,
     private val errFile: File,
     private val out: PrintStream,
-    private val err: PrintStream
+    private val err: PrintStream,
 ) : AutoCloseable {
     @Synchronized
     fun readSystemOut(): String {
@@ -59,7 +59,7 @@ internal class SystemOutputCapturer private constructor(
                 outFile = outFile,
                 errFile = errFile,
                 out = outStream,
-                err = errStream
+                err = errStream,
             )
         }
 
