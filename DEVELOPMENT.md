@@ -1,7 +1,6 @@
 # Development
 
-This is a development focused supplement
-to [CONTRIBUTING.md](https://github.com/coditory/.github/blob/main/CONTRIBUTING.md).
+This is a development focused supplement to [CONTRIBUTING.md](https://github.com/coditory/.github/blob/main/CONTRIBUTING.md).
 
 ## Pre commit hook (optional)
 
