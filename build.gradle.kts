@@ -5,7 +5,7 @@ plugins {
     id("com.gradle.plugin-publish") version "1.3.1"
     id("org.jlleitschuh.gradle.ktlint") version "12.1.2"
     id("org.jetbrains.kotlinx.kover") version "0.9.1"
-    id("com.coditory.integration-test") version "2.2.3"
+    id("com.coditory.integration-test") version "2.2.4"
 }
 
 repositories {
