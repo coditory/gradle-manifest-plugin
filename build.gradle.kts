@@ -2,10 +2,10 @@ plugins {
     kotlin("jvm") version "2.2.20"
     id("java-gradle-plugin")
     id("maven-publish")
-    id("com.gradle.plugin-publish") version "1.3.1"
-    id("org.jlleitschuh.gradle.ktlint") version "12.1.2"
-    id("org.jetbrains.kotlinx.kover") version "0.9.1"
-    id("com.coditory.integration-test") version "2.2.4"
+    id("com.gradle.plugin-publish") version "2.0.0"
+    id("org.jlleitschuh.gradle.ktlint") version "13.1.0"
+    id("org.jetbrains.kotlinx.kover") version "0.9.2"
+    id("com.coditory.integration-test") version "2.2.5"
 }
 
 repositories {
