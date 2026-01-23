@@ -2,8 +2,8 @@ plugins {
     kotlin("jvm") version "2.2.20"
     id("java-gradle-plugin")
     id("maven-publish")
-    id("com.gradle.plugin-publish") version "1.3.1"
-    id("org.jlleitschuh.gradle.ktlint") version "12.1.2"
+    id("com.gradle.plugin-publish") version "2.0.0"
+    id("org.jlleitschuh.gradle.ktlint") version "14.0.1"
     id("org.jetbrains.kotlinx.kover") version "0.9.2"
     id("com.coditory.integration-test") version "2.2.5"
 }
@@ -17,9 +17,9 @@ dependencies {
     implementation("org.eclipse.jgit:org.eclipse.jgit:7.3.0.202506031305-r")
 
     testImplementation("org.assertj:assertj-core:3.27.6")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.4")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.11.4")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.4")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:6.0.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:6.0.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:6.0.2")
 }
 
 group = "com.coditory.gradle"
